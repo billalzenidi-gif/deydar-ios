@@ -1,7 +1,7 @@
 # Deydar — app iOS (Xcode)
 
 App iPhone de Deydar. Elle affiche le site Deydar hébergé sur le VPS **brazil**
-(`https://deydar.191-215-43-242.sslip.io`) avec des fonctions natives :
+(**https://deydar.com**) avec des fonctions natives :
 
 - **Toutes les fonctions et API du site** : comptes, recherche, réservations, messages, espace hôte, 8 langues, etc.
   Chaque mise à jour publiée sur le VPS (`bash deploy/vps.sh`) arrive **immédiatement** dans l'app, sans republier sur l'App Store.
@@ -33,7 +33,7 @@ Le simulateur marche aussi : choisis par exemple « iPhone 16 », puis ▶︎.
 1. Il te faut un compte Apple Developer payant (99 $/an).
 2. Dans Xcode, menu **Product > Archive**, puis **Distribute App > App Store Connect**.
 3. Dans App Store Connect :
-   - **Politique de confidentialité** : `https://deydar.191-215-43-242.sslip.io/privacy` ;
+   - **Politique de confidentialité** : `https://deydar.com/privacy` ;
    - **Conditions d'utilisation** : `/terms`.
 
 Points de la relecture Apple à connaître :

@@ -2,12 +2,12 @@
 import UIKit
 
 enum AppConfig {
-    /// Site Deydar hébergé sur le VPS. L'app affiche ce site : chaque mise en production du VPS
+    /// Site Deydar (domaine deydar.com → VPS « brazil »). L'app affiche ce site : chaque mise en production du VPS
     /// (`bash deploy/vps.sh`) arrive dans l'app immédiatement, sans republier sur l'App Store.
-    static let baseURL = URL(string: "https://deydar.191-215-43-242.sslip.io")!
+    static let baseURL = URL(string: "https://deydar.com")!
 
     /// Domaines ouverts DANS l'app. Les autres liens (WhatsApp, cartes, sites externes…) s'ouvrent dans l'app concernée ou Safari.
-    static let appHosts: Set<String> = ["deydar.191-215-43-242.sslip.io", "deydar.vercel.app"]
+    static let appHosts: Set<String> = ["deydar.com", "www.deydar.com", "deydar.191-215-43-242.sslip.io", "deydar.vercel.app"]
 
     /// Client OAuth « Deydar iOS » du projet Google Cloud « deydar » (identifiant public, ce n'est pas un secret).
     static let googleClientID = "908429571449-5ssdpbhv2epfhoqn2231rcj2ucmljg34.apps.googleusercontent.com"
