@@ -83,7 +83,15 @@ final class WebViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(openDeepLink(_:)), name: .deydarOpenURL, object: nil)
         // Sécurité : l'écran de démarrage ne reste jamais plus de 10 s.
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in self?.hideSplash() }
-        load(AppConfig.baseURL)
+        var start = AppConfig.baseURL
+        #if DEBUG
+        // Tests automatiques (simulateur) : « -DeydarStartPath /chemin » ouvre directement une page.
+        if let path = UserDefaults.standard.string(forKey: "DeydarStartPath"),
+           let url = URL(string: path, relativeTo: AppConfig.baseURL)?.absoluteURL {
+            start = url
+        }
+        #endif
+        load(start)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .darkContent }
