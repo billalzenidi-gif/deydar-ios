@@ -1,0 +1,83 @@
+# Vérification de l'app iOS sur un Mac de GitHub : compilation simulateur + appareil (sans signature),
+# lancement dans un simulateur d'iPhone, captures d'écran publiées sur la branche « ci-shots ».
+name: iOS build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode
+        run: xcodebuild -version
+
+      - name: Compilation (simulateur)
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build-sim.log | grep -E "error:|warning:|BUILD" || true
+          test -d build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+      - name: Compilation (iPhone, Release, sans signature)
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build-device CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build-device.log | grep -E "error:|BUILD" || true
+          test -d build-device/Build/Products/Release-iphoneos/Deydar.app
+
+      - name: Lancement dans le simulateur + captures
+        run: |
+          UDID=$(xcrun simctl list devices available --json | python3 -c "
+          import json, sys
+          devs = json.load(sys.stdin)['devices']
+          phones = [d for rt, ds in devs.items() if 'iOS' in rt for d in ds if d['name'].startswith('iPhone')]
+          phones.sort(key=lambda d: ('Pro' in d['name'], d['name']))
+          print(phones[-1]['udid'])")
+          echo "Simulateur : $UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/Deydar.app
+          xcrun simctl location "$UDID" set 5.6037,-0.1870 || true
+          xcrun simctl privacy "$UDID" grant location com.deydar.app || true
+          mkdir -p shots
+          xcrun simctl launch "$UDID" com.deydar.app
+          sleep 4;  xcrun simctl io "$UDID" screenshot shots/1-demarrage.png
+          sleep 26; xcrun simctl io "$UDID" screenshot shots/2-accueil.png
+          xcrun simctl openurl "$UDID" "deydar://transport"
+          sleep 12; xcrun simctl io "$UDID" screenshot shots/3-transport.png
+          xcrun simctl openurl "$UDID" "deydar://signin"
+          sleep 10; xcrun simctl io "$UDID" screenshot shots/4-connexion.png
+          xcrun simctl spawn "$UDID" log show --last 3m --predicate 'process == "Deydar"' --style compact > shots/app-log.txt 2>&1 || true
+          grep -E "error|warning" build-sim.log | head -50 > shots/build-warnings.txt || true
+          xcodebuild -version > shots/xcode.txt
+
+      - name: Publication des captures (branche ci-shots)
+        if: always()
+        run: |
+          [ -d shots ] || exit 0
+          cp build-sim.log shots/ 2>/dev/null || true
+          cd shots
+          git init -q && git checkout -q -b ci-shots
+          git config user.name "deydar-ci" && git config user.email "deydar-ci@users.noreply.github.com"
+          git add -A && git commit -qm "Captures du simulateur ($GITHUB_SHA)"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-shots
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deydar-ios-ci
+          path: |
+            shots
+            build-sim.log
+            build-device.log
