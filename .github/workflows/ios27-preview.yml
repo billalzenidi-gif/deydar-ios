@@ -1,7 +1,7 @@
 # Aperçu de l'app dans un simulateur iOS 27 sur un Mac de GitHub (le simulateur d'Apple n'existe que sur macOS) :
 # Xcode le plus récent, runtime iOS 27 (téléchargé s'il manque), iPhone récent, captures des écrans principaux + vidéo,
 # et la version simulateur de l'app (zip) pour l'ouvrir dans un simulateur en ligne. Tout est publié sur la branche
-# « ios27-preview » (l'état de la machine y est publié dès le début, les résultats à la fin).
+# « ios27-sim » (image GitHub « xcode-27 », en aperçu public) (l'état de la machine y est publié dès le début, les résultats à la fin).
 name: iOS 27 preview
 
 on:
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   preview:
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 75
     env:
       WANT: "27"
@@ -30,10 +30,10 @@ jobs:
           cat > "$RUNNER_TEMP/pub.sh" <<'EOF'
           set -e
           D="$RUNNER_TEMP/pubrepo"; rm -rf "$D"; mkdir -p "$D"; cp -R out/. "$D/"; cd "$D"
-          git init -q && git checkout -q -b ios27-preview
+          git init -q && git checkout -q -b ios27-sim
           git config user.name deydar-ci && git config user.email deydar-ci@users.noreply.github.com
           git add -A && git commit -qm "$1"
-          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ios27-preview
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ios27-sim
           EOF
           chmod +x "$RUNNER_TEMP/pub.sh"
 
@@ -128,7 +128,7 @@ jobs:
           xcrun simctl spawn "$UDID" log show --last 15m --predicate 'process == "Deydar"' --style compact > out/journal-app.txt 2>&1 || true
           grep -E "error:|warning:" build-sim.log | head -50 > out/avertissements-compilation.txt || true
 
-      - name: Publication des résultats (branche ios27-preview)
+      - name: Publication des résultats (branche ios27-sim)
         if: always()
         run: |
           ls -la out
