@@ -1,0 +1,141 @@
+# Aperçu de l'app dans un simulateur iOS 27 sur un Mac de GitHub (le simulateur d'Apple n'existe que sur macOS) :
+# Xcode le plus récent, runtime iOS 27 (téléchargé s'il manque), iPhone récent, captures des écrans principaux + vidéo,
+# et la version simulateur de l'app (zip) pour l'ouvrir dans un simulateur en ligne. Tout est publié sur la branche
+# « ios27-preview » (l'état de la machine y est publié dès le début, les résultats à la fin).
+name: iOS 27 preview
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/ios27-preview.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: macos-26
+    timeout-minutes: 75
+    env:
+      WANT: "27"
+      BID: com.deydar.app
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publication (outil)
+        run: |
+          mkdir -p out
+          cat > "$RUNNER_TEMP/pub.sh" <<'EOF'
+          set -e
+          D="$RUNNER_TEMP/pubrepo"; rm -rf "$D"; mkdir -p "$D"; cp -R out/. "$D/"; cd "$D"
+          git init -q && git checkout -q -b ios27-preview
+          git config user.name deydar-ci && git config user.email deydar-ci@users.noreply.github.com
+          git add -A && git commit -qm "$1"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ios27-preview
+          EOF
+          chmod +x "$RUNNER_TEMP/pub.sh"
+
+      - name: Xcode le plus récent
+        run: |
+          X=$(ls -d /Applications/Xcode_${WANT}*.app 2>/dev/null | sort -V | tail -1)
+          [ -n "$X" ] || X=$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)
+          sudo xcode-select -s "$X/Contents/Developer"
+          { echo "Image : ${ImageOS:-?} ${ImageVersion:-?}"; sw_vers; echo; echo "Xcode choisi : $X"; xcodebuild -version; echo; echo "Xcode installés :"; ls -d /Applications/Xcode*.app; echo; xcrun simctl list runtimes; } > out/0-environnement.txt 2>&1
+          cat out/0-environnement.txt
+          "$RUNNER_TEMP/pub.sh" "Démarré : machine prête ($(xcodebuild -version | head -1))"
+
+      - name: Runtime iOS 27 (téléchargé s'il manque)
+        run: |
+          pick() { xcrun simctl list runtimes --json | python3 -c "
+          import json, sys, os
+          want = os.environ['WANT']; only = sys.argv[1] == 'want'
+          rs = [r for r in json.load(sys.stdin)['runtimes'] if '.iOS-' in r['identifier'] and r.get('isAvailable')]
+          if only: rs = [r for r in rs if r['version'].split('.')[0] == want]
+          rs.sort(key=lambda r: [int(x) for x in r['version'].split('.')])
+          print(rs[-1]['identifier'] if rs else '')" "$1"; }
+          RT=$(pick want)
+          if [ -z "$RT" ]; then
+            echo "iOS $WANT absent : téléchargement du runtime iOS de cet Xcode"
+            xcodebuild -downloadPlatform iOS || true
+            RT=$(pick want)
+          fi
+          if [ -z "$RT" ]; then
+            echo "iOS $WANT indisponible sur cette machine : runtime iOS le plus récent à la place" | tee out/ATTENTION.txt
+            RT=$(pick any)
+          fi
+          echo "Runtime : $RT"
+          echo "RT=$RT" >> "$GITHUB_ENV"
+
+      - name: iPhone récent sous ce runtime
+        run: |
+          DT=$(xcrun simctl list runtimes --json | python3 -c "
+          import json, sys, os, re
+          rt = next(r for r in json.load(sys.stdin)['runtimes'] if r['identifier'] == os.environ['RT'])
+          ph = [d for d in rt.get('supportedDeviceTypes', []) if d['name'].startswith('iPhone')]
+          num = lambda d: int((re.search(r'iPhone (\d+)', d['name']) or [0, 0])[1])
+          pro = [d for d in ph if 'Pro' in d['name'] and 'Max' not in d['name']] or ph
+          pro.sort(key=num)
+          print(pro[-1]['identifier'])")
+          UDID=$(xcrun simctl create "Deydar iPhone" "$DT" "$RT")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl list devices | grep -F "$UDID" | tee out/0-simulateur.txt
+
+      - name: Compilation (simulateur)
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build-sim.log | grep -E "error:|warning:|BUILD" || true
+          test -d build/Build/Products/Debug-iphonesimulator/Deydar.app
+          (cd build/Build/Products/Debug-iphonesimulator && ditto -c -k --sequesterRsrc --keepParent Deydar.app "$GITHUB_WORKSPACE/out/Deydar-simulateur.zip")
+
+      - name: Lancement dans le simulateur iOS 27 + vidéo + captures
+        run: |
+          APP=build/Build/Products/Debug-iphonesimulator/Deydar.app
+          SID=$(curl -s https://deydar.com/api/stays -H 'x-deydar: 1' | python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['id'])" || echo st_family)
+          RID=$(curl -s https://deydar.com/api/rides -H 'x-deydar: 1' | python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['id'])" || echo vh_minibus)
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" appearance light || true
+          xcrun simctl status_bar "$UDID" override --time "9:41" --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 || true
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl location "$UDID" set 5.6037,-0.1870 || true
+          xcrun simctl privacy "$UDID" grant location "$BID" || true
+          sleep 3
+          xcrun simctl io "$UDID" recordVideo --codec=h264 --force out/deydar-ios27.mp4 &
+          REC=$!
+          sleep 2
+          shot() { xcrun simctl io "$UDID" screenshot "out/$1.png"; }
+          open_at() { xcrun simctl terminate "$UDID" "$BID" 2>/dev/null || true; sleep 1; xcrun simctl launch "$UDID" "$BID" "$@" >/dev/null; }
+          open_at
+          sleep 3;  shot 01-demarrage
+          sleep 20; shot 02-accueil
+          open_at -DeydarStartPath "/?near=1";            sleep 25; shot 03-pres-de-moi-gps
+          open_at -DeydarStartPath "/stays/$SID";         sleep 20; shot 04-logement
+          open_at -DeydarStartPath "/transport";          sleep 20; shot 05-transport
+          open_at -DeydarStartPath "/transport/$RID";     sleep 20; shot 06-vehicule
+          open_at -DeydarStartPath "/signin";             sleep 15; shot 07-connexion
+          open_at -DeydarStartPath "/help";               sleep 15; shot 08-aide
+          # Téléphone en arabe : réinstallation, l'app démarre en arabe de droite à gauche
+          xcrun simctl terminate "$UDID" "$BID" || true
+          xcrun simctl uninstall "$UDID" "$BID"
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl privacy "$UDID" grant location "$BID" || true
+          open_at -AppleLanguages "(ar)" -AppleLocale ar_DZ; sleep 25; shot 09-arabe-accueil
+          kill -INT "$REC"; wait "$REC" || true
+          xcrun simctl spawn "$UDID" log show --last 15m --predicate 'process == "Deydar"' --style compact > out/journal-app.txt 2>&1 || true
+          grep -E "error:|warning:" build-sim.log | head -50 > out/avertissements-compilation.txt || true
+
+      - name: Publication des résultats (branche ios27-preview)
+        if: always()
+        run: |
+          ls -la out
+          "$RUNNER_TEMP/pub.sh" "Terminé : simulateur $(xcrun simctl list runtimes | grep -F "${RT:-none}" | sed 's/ (.*//' | head -1) ($GITHUB_SHA)"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deydar-ios27-preview
+          path: out
