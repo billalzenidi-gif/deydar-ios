@@ -139,3 +139,4 @@ jobs:
         with:
           name: deydar-ios27-preview
           path: out
+# Relancé le 09/10 : captures en période de lancement gratuite (prix « Free »).
