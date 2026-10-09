@@ -1,0 +1,26 @@
+Image : macos27 20261006.0244.1
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+
+Xcode choisi : /Applications/Xcode_27.2_beta_2.app
+Xcode 27.2
+Build version 27B5028f
+
+Xcode installés :
+/Applications/Xcode_27.0.0.app
+/Applications/Xcode_27.0.app
+/Applications/Xcode_27.1_beta.app
+/Applications/Xcode_27.1.0.app
+/Applications/Xcode_27.1.app
+/Applications/Xcode_27.2_beta_2.app
+/Applications/Xcode_27.2.0.app
+/Applications/Xcode_27.2.app
+/Applications/Xcode_27.app
+/Applications/Xcode.app
+
+== Runtimes ==
+iOS 27.0 (27.0 - 24A434) - com.apple.CoreSimulator.SimRuntime.iOS-27-0
+tvOS 27.0 (27.0 - 24J360) - com.apple.CoreSimulator.SimRuntime.tvOS-27-0
+watchOS 27.0 (27.0 - 24R362) - com.apple.CoreSimulator.SimRuntime.watchOS-27-0
+visionOS 27.0 (27.0 - 24M362) - com.apple.CoreSimulator.SimRuntime.xrOS-27-0
