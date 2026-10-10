@@ -20,6 +20,7 @@ final class WebViewController: UIViewController {
     private var downloads: [WKDownload: URL] = [:]
     private var lastURL = AppConfig.baseURL
     private var splashHidden = false
+    private var textPercent = 100
 
     #if DEBUG
     private var selfTestDone = false
@@ -137,23 +138,29 @@ final class WebViewController: UIViewController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .darkContent }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        applyTextSize()
+    /// Taille du texte choisie dans Réglages iOS (Dynamic Type) : le TEXTE du site est agrandi d'autant (jamais réduit),
+    /// la largeur de la mise en page ne change pas (un zoom de page ferait déborder l'écran). Plafond 135 %.
+    @objc private func applyTextSize() {
+        guard isViewLoaded, webView != nil else { return }
+        let percents: [UIContentSizeCategory: Int] = [
+            .extraLarge: 106, .extraExtraLarge: 112, .extraExtraExtraLarge: 118,
+            .accessibilityMedium: 124, .accessibilityLarge: 130, .accessibilityExtraLarge: 135,
+            .accessibilityExtraExtraLarge: 135, .accessibilityExtraExtraExtraLarge: 135,
+        ]
+        let percent = percents[UIApplication.shared.preferredContentSizeCategory] ?? 100
+        guard percent != textPercent else { return }
+        textPercent = percent
+        // Scripts injectés à chaque page : pont natif + taille du texte (recréés quand le réglage change).
+        let controller = webView.configuration.userContentController
+        controller.removeAllUserScripts()
+        controller.addUserScript(WKUserScript(source: NativeBridge.script(geoState: location.state), injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        controller.addUserScript(WKUserScript(source: Self.textSizeScript(percent), injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        runJS(Self.textSizeScript(percent))
     }
 
-    /// Taille du texte choisie dans Réglages iOS (Dynamic Type) : le site est agrandi d'autant, jamais réduit,
-    /// sans descendre sous 320 points de largeur utile pour garder la mise en page mobile.
-    @objc private func applyTextSize() {
-        guard isViewLoaded, webView != nil, view.bounds.width > 0 else { return }
-        let factors: [UIContentSizeCategory: CGFloat] = [
-            .extraLarge: 1.06, .extraExtraLarge: 1.12, .extraExtraExtraLarge: 1.18,
-            .accessibilityMedium: 1.24, .accessibilityLarge: 1.30, .accessibilityExtraLarge: 1.36,
-            .accessibilityExtraExtraLarge: 1.42, .accessibilityExtraExtraExtraLarge: 1.50,
-        ]
-        let wanted = factors[UIApplication.shared.preferredContentSizeCategory] ?? 1
-        let zoom = max(1, min(wanted, view.bounds.width / 320))
-        if abs(webView.pageZoom - zoom) > 0.001 { webView.pageZoom = zoom }
+    static func textSizeScript(_ percent: Int) -> String {
+        let css = percent > 100 ? "html{-webkit-text-size-adjust:\(percent)% !important}" : ""
+        return "(function(){var s=document.getElementById('dd-text-size');if(!s){s=document.createElement('style');s.id='dd-text-size';(document.head||document.documentElement).appendChild(s);}s.textContent='\(css)';})();"
     }
 
     private func showProgress(_ value: Double) {
@@ -348,8 +355,8 @@ extension WebViewController: WKNavigationDelegate {
         guard !selfTestDone, let mode = UserDefaults.standard.string(forKey: "DeydarSelfTest") else { return }
         selfTestDone = true
         NSLog("DEYDAR-SELFTEST filename %@", Self.safeFilename("../a/b:c?.json"))
-        NSLog("DEYDAR-SELFTEST textsize %@ zoom %.2f", UIApplication.shared.preferredContentSizeCategory.rawValue, Double(webView.pageZoom))
-        let probe = #"JSON.stringify({share: typeof navigator.share, canShareUrl: !!(navigator.canShare && navigator.canShare({url: 'https://deydar.com'})), canShareFiles: !!(navigator.canShare && navigator.canShare({files: [1]})), native: !!window.DeydarNative})"#
+        NSLog("DEYDAR-SELFTEST textsize %@ text %ld%%", UIApplication.shared.preferredContentSizeCategory.rawValue, textPercent)
+        let probe = #"JSON.stringify({share: typeof navigator.share, canShareUrl: !!(navigator.canShare && navigator.canShare({url: 'https://deydar.com'})), canShareFiles: !!(navigator.canShare && navigator.canShare({files: [1]})), native: !!window.DeydarNative, textAdjust: getComputedStyle(document.documentElement).webkitTextSizeAdjust, overflow: document.documentElement.scrollWidth > window.innerWidth + 1})"#
         webView.evaluateJavaScript(probe) { result, error in
             NSLog("DEYDAR-SELFTEST bridge %@", (result as? String) ?? String(describing: error))
         }
