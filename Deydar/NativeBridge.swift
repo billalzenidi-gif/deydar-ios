@@ -1,6 +1,7 @@
 // Script injecté dans le site au chargement de chaque page (avant ses propres scripts) :
 // - window.DeydarNative : pont vers l'app (connexion Google native, vibration),
 // - navigator.geolocation et navigator.permissions branchés sur CoreLocation (une seule demande d'autorisation, celle d'iOS),
+// - navigator.share branché sur la feuille de partage iOS,
 // - au premier lancement, la langue du site = celle du téléphone (si Deydar la propose).
 import Foundation
 
@@ -46,6 +47,20 @@ enum NativeBridge {
         googleSignIn: function () { return call('google'); },
         haptic: function () { bridge.postMessage({ type: 'haptic' }); }
       };
+
+      // navigator.share → feuille de partage iOS (textes et liens ; pas de fichiers).
+      function share(data) {
+        var d = data || {}, link = '';
+        try { if (d.url) link = String(new URL(String(d.url), location.href)); } catch (e) { return Promise.reject(new TypeError('Invalid URL')); }
+        var msg = { title: d.title ? String(d.title) : '', text: d.text ? String(d.text) : '', url: link };
+        if (!msg.title && !msg.text && !msg.url) return Promise.reject(new TypeError('Nothing to share'));
+        return call('share', msg).then(function () { return undefined; }, function (e) {
+          var err = new Error((e && e.message) || 'Share canceled'); err.name = 'AbortError'; throw err;
+        });
+      }
+      function canShare(d) { return !!(d && (d.title || d.text || d.url)) && !(d.files && d.files.length); }
+      try { Object.defineProperty(navigator, 'share', { value: share, configurable: true, writable: true }); } catch (e) { navigator.share = share; }
+      try { Object.defineProperty(navigator, 'canShare', { value: canShare, configurable: true, writable: true }); } catch (e) {}
 
       window.__ddGeoState = '__GEOSTATE__';
       var watchers = {}, gseq = 0;

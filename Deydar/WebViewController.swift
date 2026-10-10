@@ -1,19 +1,31 @@
 // Écran principal : le site Deydar dans une WKWebView réglée comme une app native.
 // Écran de démarrage, tirer pour actualiser, retour par balayage, liens externes ouverts dans Safari/l'app concernée,
 // boîtes de dialogue JavaScript natives, écran hors ligne avec « Réessayer », photos (caméra/photothèque) gérées par iOS,
-// pont natif (connexion Google, GPS) via NativeBridge.
+// pont natif (connexion Google, GPS, partage) via NativeBridge, fichiers téléchargés proposés à l'enregistrement (Fichiers),
+// reconnexion automatique quand le réseau revient, taille du texte iOS (Dynamic Type) appliquée au site.
 import UIKit
 import WebKit
+import Network
 
 final class WebViewController: UIViewController {
     private var webView: WKWebView!
     private let splash = SplashView()
     private let offline = OfflineView()
     private let refresh = UIRefreshControl()
+    private let progress = UIProgressView(progressViewStyle: .bar)
     private let location = LocationBridge()
     private let google = GoogleSignIn()
+    private let pathMonitor = NWPathMonitor()
+    private var progressObservation: NSKeyValueObservation?
+    private var downloads: [WKDownload: URL] = [:]
     private var lastURL = AppConfig.baseURL
     private var splashHidden = false
+
+    #if DEBUG
+    private var selfTestDone = false
+    #endif
+
+    deinit { pathMonitor.cancel() }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +66,22 @@ final class WebViewController: UIViewController {
         refresh.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         webView.scrollView.refreshControl = refresh
 
+        // Fine barre de chargement sous la barre d'état.
+        progress.translatesAutoresizingMaskIntoConstraints = false
+        progress.progressTintColor = AppConfig.brown
+        progress.trackTintColor = .clear
+        progress.isAccessibilityElement = false
+        progress.alpha = 0
+        view.addSubview(progress)
+        NSLayoutConstraint.activate([
+            progress.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progress.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progress.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        progressObservation = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] web, _ in
+            DispatchQueue.main.async { self?.showProgress(web.estimatedProgress) }
+        }
+
         for overlay in [offline, splash] as [UIView] {
             overlay.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(overlay)
@@ -81,6 +109,19 @@ final class WebViewController: UIViewController {
         }
 
         NotificationCenter.default.addObserver(self, selector: #selector(openDeepLink(_:)), name: .deydarOpenURL, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applyTextSize), name: UIContentSizeCategory.didChangeNotification, object: nil)
+        applyTextSize()
+
+        // Le réseau revient pendant que l'écran hors ligne est affiché : nouvel essai automatique.
+        pathMonitor.pathUpdateHandler = { [weak self] path in
+            guard path.status == .satisfied else { return }
+            DispatchQueue.main.async {
+                guard let self = self, !self.offline.isHidden else { return }
+                self.retry()
+            }
+        }
+        pathMonitor.start(queue: DispatchQueue(label: "com.deydar.app.network"))
+
         // Sécurité : l'écran de démarrage ne reste jamais plus de 10 s.
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in self?.hideSplash() }
         var start = AppConfig.baseURL
@@ -95,6 +136,36 @@ final class WebViewController: UIViewController {
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .darkContent }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        applyTextSize()
+    }
+
+    /// Taille du texte choisie dans Réglages iOS (Dynamic Type) : le site est agrandi d'autant, jamais réduit,
+    /// sans descendre sous 320 points de largeur utile pour garder la mise en page mobile.
+    @objc private func applyTextSize() {
+        guard isViewLoaded, webView != nil, view.bounds.width > 0 else { return }
+        let factors: [UIContentSizeCategory: CGFloat] = [
+            .extraLarge: 1.06, .extraExtraLarge: 1.12, .extraExtraExtraLarge: 1.18,
+            .accessibilityMedium: 1.24, .accessibilityLarge: 1.30, .accessibilityExtraLarge: 1.36,
+            .accessibilityExtraExtraLarge: 1.42, .accessibilityExtraExtraExtraLarge: 1.50,
+        ]
+        let wanted = factors[UIApplication.shared.preferredContentSizeCategory] ?? 1
+        let zoom = max(1, min(wanted, view.bounds.width / 320))
+        if abs(webView.pageZoom - zoom) > 0.001 { webView.pageZoom = zoom }
+    }
+
+    private func showProgress(_ value: Double) {
+        if value >= 1 {
+            progress.setProgress(1, animated: true)
+            UIView.animate(withDuration: 0.25, delay: 0.1, options: [], animations: { self.progress.alpha = 0 },
+                           completion: { _ in if self.webView.estimatedProgress >= 1 { self.progress.setProgress(0, animated: false) } })
+        } else {
+            progress.alpha = 1
+            progress.setProgress(Float(max(0.08, value)), animated: value > Double(progress.progress))
+        }
+    }
 
     // MARK: Chargement
 
@@ -162,11 +233,45 @@ final class WebViewController: UIViewController {
     private func showOffline() {
         refresh.endRefreshing()
         hideSplash()
+        let wasHidden = offline.isHidden
         offline.isHidden = false
+        // VoiceOver : l'écran hors ligne prend le focus, la page en dessous n'est plus lue.
+        if wasHidden { UIAccessibility.post(notification: .screenChanged, argument: offline) }
     }
 
     private func openExternally(_ url: URL) {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    /// Contrôleur le plus haut affiché (feuille déjà ouverte, alerte…), pour y présenter la suivante.
+    private func topPresenter() -> UIViewController {
+        var top: UIViewController = self
+        while let presented = top.presentedViewController, !presented.isBeingDismissed { top = presented }
+        return top
+    }
+
+    /// Feuille de partage iOS : Messages, WhatsApp, Mail, Copier, « Enregistrer dans Fichiers »…
+    private func presentShareSheet(_ items: [Any], completion: ((Bool) -> Void)? = nil) {
+        let sheet = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        sheet.completionWithItemsHandler = { _, completed, _, _ in completion?(completed) }
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 1, height: 1)
+            popover.permittedArrowDirections = []
+        }
+        topPresenter().present(sheet, animated: true)
+    }
+
+    private func showMessage(_ text: String) {
+        let alert = UIAlertController(title: nil, message: text, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: L10n.t("ok"), style: .default))
+        topPresenter().present(alert, animated: true)
+    }
+
+    /// Messages du pont acceptés seulement depuis la page principale de Deydar (jamais d'un cadre intégré tiers).
+    private func isTrusted(_ message: WKScriptMessage) -> Bool {
+        guard message.frameInfo.isMainFrame else { return false }
+        return AppConfig.appHosts.contains(message.frameInfo.securityOrigin.host.lowercased())
     }
 }
 
@@ -176,6 +281,11 @@ extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url, let scheme = url.scheme?.lowercased() else {
             decisionHandler(.cancel)
+            return
+        }
+        // Lien <a download> (export des données du compte, pièce jointe…) : téléchargé puis proposé à l'enregistrement.
+        if navigationAction.shouldPerformDownload {
+            decisionHandler(.download)
             return
         }
         if ["about", "blob", "data"].contains(scheme) {
@@ -201,12 +311,60 @@ extension WebViewController: WKNavigationDelegate {
         decisionHandler(.cancel)
     }
 
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        guard navigationResponse.isForMainFrame else { decisionHandler(.allow); return }
+        // Fichier envoyé en pièce jointe, ou format que la vue web ne sait pas afficher : téléchargement.
+        if let http = navigationResponse.response as? HTTPURLResponse,
+           let disposition = http.value(forHTTPHeaderField: "Content-Disposition"),
+           disposition.lowercased().hasPrefix("attachment") {
+            decisionHandler(.download)
+            return
+        }
+        decisionHandler(navigationResponse.canShowMIMEType ? .allow : .download)
+    }
+
+    func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+        download.delegate = self
+    }
+
+    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+        download.delegate = self
+    }
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         refresh.endRefreshing()
         offline.isHidden = true
         if let url = webView.url { lastURL = url }
         hideSplashWhenRendered()
+        #if DEBUG
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in self?.runSelfTest() }
+        #endif
     }
+
+    #if DEBUG
+    /// Tests automatiques du simulateur (CI) : « -DeydarSelfTest bridge|download|share|offline ».
+    /// Écrit les résultats dans le journal (préfixe DEYDAR-SELFTEST) et ouvre l'écran à capturer. Jamais compilé en Release.
+    private func runSelfTest() {
+        guard !selfTestDone, let mode = UserDefaults.standard.string(forKey: "DeydarSelfTest") else { return }
+        selfTestDone = true
+        NSLog("DEYDAR-SELFTEST filename %@", Self.safeFilename("../a/b:c?.json"))
+        NSLog("DEYDAR-SELFTEST textsize %@ zoom %.2f", UIApplication.shared.preferredContentSizeCategory.rawValue, Double(webView.pageZoom))
+        let probe = #"JSON.stringify({share: typeof navigator.share, canShareUrl: !!(navigator.canShare && navigator.canShare({url: 'https://deydar.com'})), canShareFiles: !!(navigator.canShare && navigator.canShare({files: [1]})), native: !!window.DeydarNative})"#
+        webView.evaluateJavaScript(probe) { result, error in
+            NSLog("DEYDAR-SELFTEST bridge %@", (result as? String) ?? String(describing: error))
+        }
+        switch mode {
+        case "download":
+            runJS(#"(function () { var u = URL.createObjectURL(new Blob(['{"selftest": true}'], {type: 'application/json'})); var a = document.createElement('a'); a.href = u; a.download = 'deydar-selftest.json'; document.body.appendChild(a); a.click(); a.remove(); })();"#)
+        case "share":
+            runJS(#"navigator.share({title: 'Deydar', url: location.href}).then(function () {}, function () {});"#)
+        case "offline":
+            showOffline()
+        default:
+            break
+        }
+    }
+    #endif
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         handle(error)
@@ -229,6 +387,41 @@ extension WebViewController: WKNavigationDelegate {
         if let failing = nsError.userInfo[NSURLErrorFailingURLErrorKey] as? URL,
            let host = failing.host?.lowercased(), !AppConfig.appHosts.contains(host) { return }
         showOffline()
+    }
+}
+
+// MARK: - Téléchargements
+
+extension WebViewController: WKDownloadDelegate {
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+        // Dossier temporaire propre à chaque fichier : jamais d'écrasement, iOS le vide lui-même.
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent("download-" + UUID().uuidString, isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        } catch {
+            completionHandler(nil)
+            return
+        }
+        let destination = folder.appendingPathComponent(Self.safeFilename(suggestedFilename))
+        downloads[download] = destination
+        completionHandler(destination)
+    }
+
+    func downloadDidFinish(_ download: WKDownload) {
+        guard let file = downloads.removeValue(forKey: download) else { return }
+        presentShareSheet([file])
+    }
+
+    func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) {
+        downloads.removeValue(forKey: download)
+        showMessage(L10n.t("download.failed"))
+    }
+
+    /// Nom proposé par le site, sans séparateurs de chemin ni caractères de contrôle.
+    static func safeFilename(_ name: String) -> String {
+        let forbidden = CharacterSet(charactersIn: "/\\:?%*|\"<>").union(.controlCharacters).union(.newlines)
+        let cleaned = name.components(separatedBy: forbidden).joined(separator: "-").trimmingCharacters(in: CharacterSet(charactersIn: " ."))
+        return cleaned.isEmpty ? "deydar-file" : String(cleaned.prefix(120))
     }
 }
 
@@ -284,9 +477,22 @@ extension WebViewController: WKUIDelegate {
 
 extension WebViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard let body = message.body as? [String: Any], let type = body["type"] as? String else { return }
+        guard isTrusted(message), let body = message.body as? [String: Any], let type = body["type"] as? String else { return }
         let id = (body["id"] as? NSNumber)?.intValue ?? 0
         switch type {
+        case "share":
+            // navigator.share du site → feuille de partage iOS.
+            func field(_ key: String) -> String? {
+                guard let value = (body[key] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty else { return nil }
+                return String(value.prefix(2000))
+            }
+            var items: [Any] = []
+            if let text = field("text") ?? field("title") { items.append(text) }
+            if let link = field("url"), let url = URL(string: link), ["http", "https"].contains(url.scheme?.lowercased() ?? "") { items.append(url) }
+            guard !items.isEmpty else { resolve(id, ok: false, payload: "empty"); return }
+            presentShareSheet(items) { [weak self] completed in
+                self?.resolve(id, ok: completed, payload: completed ? NSNull() as Any : "cancelled")
+            }
         case "google":
             google.signIn(from: view.window) { [weak self] result in
                 switch result {
@@ -334,9 +540,13 @@ final class SplashView: UIView {
         backgroundColor = AppConfig.sand
         let logo = UIImageView(image: UIImage(named: "LaunchLogo"))
         logo.contentMode = .scaleAspectFit
+        logo.isAccessibilityElement = false
         let spinner = UIActivityIndicatorView(style: .medium)
         spinner.color = AppConfig.brown
         spinner.startAnimating()
+        isAccessibilityElement = true
+        accessibilityLabel = L10n.t("loading")
+        accessibilityTraits = .updatesFrequently
         for v in [logo, spinner] as [UIView] { v.translatesAutoresizingMaskIntoConstraints = false; addSubview(v) }
         NSLayoutConstraint.activate([
             logo.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
@@ -355,17 +565,24 @@ final class OfflineView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = AppConfig.sand
+        // Textes à la taille choisie dans Réglages iOS (Dynamic Type), lus par VoiceOver ; l'icône est décorative.
+        accessibilityViewIsModal = true
         let icon = UIImageView(image: UIImage(systemName: "wifi.slash"))
         icon.tintColor = AppConfig.brown
         icon.contentMode = .scaleAspectFit
+        icon.isAccessibilityElement = false
         let title = UILabel()
         title.text = L10n.t("offline.title")
-        title.font = .systemFont(ofSize: 22, weight: .semibold)
+        title.font = UIFontMetrics(forTextStyle: .title2).scaledFont(for: .systemFont(ofSize: 22, weight: .semibold))
+        title.adjustsFontForContentSizeCategory = true
+        title.accessibilityTraits = .header
         title.textColor = AppConfig.ink
         title.textAlignment = .center
+        title.numberOfLines = 0
         let text = UILabel()
-        text.text = L10n.t("offline.text")
-        text.font = .systemFont(ofSize: 16)
+        text.text = L10n.t("offline.text") + "\n" + L10n.t("offline.auto")
+        text.font = .preferredFont(forTextStyle: .body)
+        text.adjustsFontForContentSizeCategory = true
         text.textColor = AppConfig.muted
         text.textAlignment = .center
         text.numberOfLines = 0
@@ -384,10 +601,14 @@ final class OfflineView: UIView {
         stack.setCustomSpacing(26, after: text)
         stack.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stack)
+        let centered = stack.centerYAnchor.constraint(equalTo: centerYAnchor)
+        centered.priority = .defaultHigh
         NSLayoutConstraint.activate([
             icon.heightAnchor.constraint(equalToConstant: 54),
             icon.widthAnchor.constraint(equalToConstant: 64),
-            stack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            centered,
+            stack.topAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor, constant: -16),
             stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
         ])

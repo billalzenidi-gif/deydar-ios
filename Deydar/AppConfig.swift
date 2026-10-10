@@ -40,6 +40,9 @@ enum L10n {
         "retry": ["en": "Try again", "fr": "Réessayer", "ar": "إعادة المحاولة", "es": "Reintentar", "pt": "Tentar novamente", "de": "Erneut versuchen", "it": "Riprova", "nl": "Opnieuw proberen"],
         "ok": ["en": "OK", "fr": "OK", "ar": "حسنًا", "es": "Aceptar", "pt": "OK", "de": "OK", "it": "OK", "nl": "OK"],
         "cancel": ["en": "Cancel", "fr": "Annuler", "ar": "إلغاء", "es": "Cancelar", "pt": "Cancelar", "de": "Abbrechen", "it": "Annulla", "nl": "Annuleren"],
+        "loading": ["en": "Loading Deydar", "fr": "Chargement de Deydar", "ar": "جارٍ تحميل Deydar", "es": "Cargando Deydar", "pt": "A carregar a Deydar", "de": "Deydar wird geladen", "it": "Caricamento di Deydar", "nl": "Deydar wordt geladen"],
+        "download.failed": ["en": "The file could not be downloaded. Please try again.", "fr": "Le fichier n'a pas pu être téléchargé. Réessayez.", "ar": "تعذّر تنزيل الملف. حاول مرة أخرى.", "es": "No se pudo descargar el archivo. Inténtalo de nuevo.", "pt": "Não foi possível transferir o ficheiro. Tente novamente.", "de": "Die Datei konnte nicht heruntergeladen werden. Bitte versuch es erneut.", "it": "Impossibile scaricare il file. Riprova.", "nl": "Het bestand kon niet worden gedownload. Probeer het opnieuw."],
+        "offline.auto": ["en": "We will reconnect automatically as soon as the network is back.", "fr": "La page se rechargera automatiquement dès que le réseau revient.", "ar": "سنعيد الاتصال تلقائيًا فور عودة الشبكة.", "es": "Nos reconectaremos automáticamente en cuanto vuelva la red.", "pt": "Voltamos a ligar automaticamente assim que a rede regressar.", "de": "Sobald das Netz zurück ist, verbinden wir automatisch neu.", "it": "Ci riconnetteremo automaticamente appena torna la rete.", "nl": "We maken automatisch opnieuw verbinding zodra het netwerk terug is."],
     ]
     static func t(_ key: String) -> String {
         table[key]?[AppConfig.deviceLanguage] ?? table[key]?["en"] ?? key

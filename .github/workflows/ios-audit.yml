@@ -1,0 +1,115 @@
+# Vérification de la branche d'audit sur un Mac de GitHub, SANS rien envoyer à Apple :
+# compilation simulateur (Debug) + iPhone (Release, sans signature), manifeste de confidentialité présent,
+# auto-tests du pont natif (partage, téléchargement → Fichiers, taille du texte, écran hors ligne) et captures.
+# Aucune signature, aucune archive, aucun envoi App Store Connect / TestFlight. Résultats : branche « ci-audit-shots ».
+name: iOS audit build
+
+on:
+  push:
+    branches: ['audit/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode
+        run: xcodebuild -version | tee xcode.txt
+
+      - name: Compilation (simulateur, Debug)
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build-sim.log | grep -E "error:|warning:|BUILD" || true
+          test -d build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+      - name: Compilation (iPhone, Release, sans signature)
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Release \
+            -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build-device CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build-device.log | grep -E "error:|warning:|BUILD" || true
+          test -d build-device/Build/Products/Release-iphoneos/Deydar.app
+
+      - name: Contrôles du paquet (manifeste de confidentialité, Info.plist, pas de code de test en Release)
+        run: |
+          mkdir -p shots
+          {
+            for APP in build/Build/Products/Debug-iphonesimulator/Deydar.app build-device/Build/Products/Release-iphoneos/Deydar.app; do
+              echo "== $APP"
+              test -f "$APP/PrivacyInfo.xcprivacy" && echo "PrivacyInfo.xcprivacy: present"
+              plutil -lint "$APP/PrivacyInfo.xcprivacy"
+              plutil -extract NSPrivacyTracking raw "$APP/PrivacyInfo.xcprivacy" | sed 's/^/NSPrivacyTracking: /'
+              plutil -extract CFBundleShortVersionString raw "$APP/Info.plist" | sed 's/^/Version: /'
+              plutil -extract CFBundleVersion raw "$APP/Info.plist" | sed 's/^/Build: /'
+              plutil -extract ITSAppUsesNonExemptEncryption raw "$APP/Info.plist" | sed 's/^/ITSAppUsesNonExemptEncryption: /'
+            done
+            echo "== Release : chaînes d'auto-test absentes ?"
+            if strings build-device/Build/Products/Release-iphoneos/Deydar.app/Deydar | grep -q "DEYDAR-SELFTEST"; then echo "ECHEC : code d'auto-test présent en Release"; exit 1; else echo "OK : aucun code d'auto-test en Release"; fi
+          } 2>&1 | tee shots/0-bundle-checks.txt
+
+      - name: Simulateur + auto-tests + captures
+        run: |
+          UDID=$(xcrun simctl list devices available --json | python3 -c "
+          import json, sys
+          devs = json.load(sys.stdin)['devices']
+          phones = [d for rt, ds in devs.items() if 'iOS' in rt for d in ds if d['name'].startswith('iPhone')]
+          phones.sort(key=lambda d: ('Pro' in d['name'], d['name']))
+          print(phones[-1]['udid'])")
+          echo "Simulateur : $UDID" | tee shots/device.txt
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 || true
+          APP=build/Build/Products/Debug-iphonesimulator/Deydar.app
+          BID=com.deydar.app
+          xcrun simctl install "$UDID" "$APP"
+          run() { # run <capture> <attente> <arguments…>
+            local shot=$1 wait=$2; shift 2
+            xcrun simctl terminate "$UDID" $BID 2>/dev/null || true
+            xcrun simctl launch "$UDID" $BID "$@"
+            sleep "$wait"; xcrun simctl io "$UDID" screenshot "shots/$shot.png"
+          }
+          run 1-accueil 30
+          run 2-pont-natif 30 -DeydarSelfTest bridge
+          run 3-telechargement-fichiers 34 -DeydarSelfTest download
+          run 4-partage 34 -DeydarSelfTest share
+          run 5-texte-tres-grand 30 -UIPreferredContentSizeCategoryName UICTContentSizeCategoryAccessibilityL
+          run 6-hors-ligne-texte-grand 30 -DeydarSelfTest offline -UIPreferredContentSizeCategoryName UICTContentSizeCategoryAccessibilityL
+          run 7-arabe-transport 30 -AppleLanguages "(ar)" -AppleLocale ar_DZ -DeydarStartPath "/transport"
+          run 8-connexion 25 -DeydarStartPath "/signin"
+          xcrun simctl spawn "$UDID" log show --last 15m --predicate 'process == "Deydar"' --style compact > shots/app-log.txt 2>&1 || true
+          grep "DEYDAR-SELFTEST" shots/app-log.txt | tee shots/selftest.txt || true
+
+      - name: Résultats des auto-tests
+        run: |
+          set -e
+          f=shots/selftest.txt
+          check() { if grep -q "$1" "$f"; then echo "PASS  $2"; else echo "FAIL  $2"; FAILED=1; fi; }
+          FAILED=0
+          {
+            check 'filename -a-b-c-.json' "nom de fichier nettoyé (pas de ../ ni de :)"
+            check '"share":"function"' "navigator.share branché sur la feuille iOS"
+            check '"canShareUrl":true' "navigator.canShare(url) = vrai"
+            check '"canShareFiles":false' "navigator.canShare(fichiers) = faux (non pris en charge)"
+            check '"native":true' "window.DeydarNative présent"
+            check 'AccessibilityL zoom 1\.[1-9]' "texte très grand : page agrandie"
+          } | tee shots/selftest-results.txt
+          grep -q FAIL shots/selftest-results.txt && exit 1 || true
+
+      - name: Publication des captures (branche ci-audit-shots, captures et journaux seulement)
+        if: always()
+        run: |
+          [ -d shots ] || exit 0
+          cp build-sim.log build-device.log xcode.txt shots/ 2>/dev/null || true
+          cd shots
+          git init -q && git checkout -q -b ci-audit-shots
+          git config user.name "deydar-ci" && git config user.email "deydar-ci@users.noreply.github.com"
+          git add -A && git commit -qm "Audit iOS ($GITHUB_SHA)"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-audit-shots
