@@ -82,6 +82,9 @@ jobs:
           run 4-partage 34 -DeydarSelfTest share
           run 5-texte-tres-grand 30 -UIPreferredContentSizeCategoryName UICTContentSizeCategoryAccessibilityL
           run 6-hors-ligne-texte-grand 30 -DeydarSelfTest offline -UIPreferredContentSizeCategoryName UICTContentSizeCategoryAccessibilityL
+          # Langue du site choisie au PREMIER lancement (mémorisée ensuite) : réinstallation pour repartir de zéro en arabe.
+          xcrun simctl terminate "$UDID" $BID 2>/dev/null || true
+          xcrun simctl uninstall "$UDID" $BID && xcrun simctl install "$UDID" "$APP"
           run 7-arabe-transport 30 -AppleLanguages "(ar)" -AppleLocale ar_DZ -DeydarStartPath "/transport"
           run 8-connexion 25 -DeydarStartPath "/signin"
           xcrun simctl spawn "$UDID" log show --last 15m --predicate 'process == "Deydar"' --style compact > shots/app-log.txt 2>&1 || true
