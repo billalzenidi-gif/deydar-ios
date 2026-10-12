@@ -15,6 +15,7 @@
 		D10000000000000000000035 /* GoogleSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000025 /* GoogleSignIn.swift */; };
 		D10000000000000000000036 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000026 /* Assets.xcassets */; };
 		D10000000000000000000037 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000028 /* PrivacyInfo.xcprivacy */; };
+		D10000000000000000000038 /* PushBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000029 /* PushBridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,8 @@
 		D10000000000000000000026 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D10000000000000000000027 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D10000000000000000000028 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D10000000000000000000029 /* PushBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushBridge.swift; sourceTree = "<group>"; };
+		D1000000000000000000002A /* Deydar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Deydar.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +72,8 @@
 				D10000000000000000000026 /* Assets.xcassets */,
 				D10000000000000000000027 /* Info.plist */,
 				D10000000000000000000028 /* PrivacyInfo.xcprivacy */,
+				D10000000000000000000029 /* PushBridge.swift */,
+				D1000000000000000000002A /* Deydar.entitlements */,
 			);
 			path = Deydar;
 			sourceTree = "<group>";
@@ -149,6 +154,7 @@
 				D10000000000000000000033 /* NativeBridge.swift in Sources */,
 				D10000000000000000000034 /* LocationBridge.swift in Sources */,
 				D10000000000000000000035 /* GoogleSignIn.swift in Sources */,
+				D10000000000000000000038 /* PushBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +224,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = NO;
 				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Deydar/Deydar.entitlements;
 				INFOPLIST_FILE = Deydar/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -244,6 +251,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = NO;
 				GENERATE_INFOPLIST_FILE = NO;
+				CODE_SIGN_ENTITLEMENTS = Deydar/Deydar.entitlements;
 				INFOPLIST_FILE = Deydar/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (

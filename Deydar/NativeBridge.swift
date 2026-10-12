@@ -2,6 +2,7 @@
 // - window.DeydarNative : pont vers l'app (connexion Google native, vibration),
 // - navigator.geolocation et navigator.permissions branchés sur CoreLocation (une seule demande d'autorisation, celle d'iOS),
 // - navigator.share branché sur la feuille de partage iOS,
+// - notifications push (DeydarNative.push : autorisation et jeton APNs, inscrits ensuite par le site),
 // - au premier lancement, la langue du site = celle du téléphone (si Deydar la propose).
 import Foundation
 
@@ -45,6 +46,8 @@ enum NativeBridge {
         platform: 'ios',
         version: '__VERSION__',
         googleSignIn: function () { return call('google'); },
+        // Notifications push : 'status' | 'refresh' | 'register' → { status, token?, env? }
+        push: function (action) { return call('push', { action: action || 'status' }); },
         haptic: function () { bridge.postMessage({ type: 'haptic' }); }
       };
 

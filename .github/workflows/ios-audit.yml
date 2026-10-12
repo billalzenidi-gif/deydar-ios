@@ -6,7 +6,7 @@ name: iOS audit build
 
 on:
   push:
-    branches: ['audit/**']
+    branches: ['audit/**', 'sync/**']
   workflow_dispatch:
 
 permissions:
@@ -87,6 +87,16 @@ jobs:
           xcrun simctl uninstall "$UDID" $BID && xcrun simctl install "$UDID" "$APP"
           run 7-arabe-transport 30 -AppleLanguages "(ar)" -AppleLocale ar_DZ -DeydarStartPath "/transport"
           run 8-connexion 25 -DeydarStartPath "/signin"
+          # Notifications push : état de l'autorisation (aucune question au lancement), notification simulée app ouverte.
+          run 9-push 25 -DeydarSelfTest push
+          printf '%s' '{"aps":{"alert":{"title":"New booking request","body":"Test from CI"},"sound":"default"},"link":"/host/bookings"}' > push.apns
+          xcrun simctl push "$UDID" $BID push.apns || true
+          sleep 4; xcrun simctl io "$UDID" screenshot shots/10-push-banniere.png
+          # Retour au premier plan : Safari passe devant, puis l'app revient → resynchronisation demandée au site.
+          xcrun simctl openurl "$UDID" https://example.com || true
+          sleep 6
+          xcrun simctl launch "$UDID" $BID || true
+          sleep 5; xcrun simctl io "$UDID" screenshot shots/11-retour-premier-plan.png
           xcrun simctl spawn "$UDID" log show --last 15m --predicate 'process == "Deydar"' --style compact > shots/app-log.txt 2>&1 || true
           grep "DEYDAR-SELFTEST" shots/app-log.txt | tee shots/selftest.txt || true
 
@@ -105,6 +115,9 @@ jobs:
             check 'AccessibilityL text 130%' "texte très grand : réglage iOS lu (130 %)"
             check '"textAdjust":"130%","overflow":false' "texte très grand : texte du site agrandi, aucun débordement horizontal"
             check '"textAdjust":"100%","overflow":false' "taille normale : aucun débordement horizontal"
+            check 'push status notDetermined' "push : aucune autorisation demandée au lancement"
+            check 'resync foreground' "retour au premier plan : resynchronisation demandée au site"
+            check 'push received link=/host/bookings' "push : notification reçue app ouverte (lien interne lu)"
           } | tee shots/selftest-results.txt
           grep -q FAIL shots/selftest-results.txt && exit 1 || true
 

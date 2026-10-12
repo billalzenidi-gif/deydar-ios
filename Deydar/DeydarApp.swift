@@ -3,6 +3,9 @@ import SwiftUI
 
 @main
 struct DeydarApp: App {
+    // Notifications push (jeton APNs, notification touchée) : délégué UIKit classique.
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
         WindowGroup {
             WebScreen()

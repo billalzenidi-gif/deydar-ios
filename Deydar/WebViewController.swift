@@ -21,6 +21,7 @@ final class WebViewController: UIViewController {
     private var lastURL = AppConfig.baseURL
     private var splashHidden = false
     private var textPercent = 100
+    private var activatedOnce = false
 
     #if DEBUG
     private var selfTestDone = false
@@ -111,6 +112,7 @@ final class WebViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(openDeepLink(_:)), name: .deydarOpenURL, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applyTextSize), name: UIContentSizeCategory.didChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(becameActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         applyTextSize()
 
         // Le réseau revient pendant que l'écran hors ligne est affiché : nouvel essai automatique.
@@ -161,6 +163,15 @@ final class WebViewController: UIViewController {
     static func textSizeScript(_ percent: Int) -> String {
         let css = percent > 100 ? "html{-webkit-text-size-adjust:\(percent)% !important}" : ""
         return "(function(){var s=document.getElementById('dd-text-size');if(!s){s=document.createElement('style');s.id='dd-text-size';(document.head||document.documentElement).appendChild(s);}s.textContent='\(css)';})();"
+    }
+
+    /// Retour au premier plan : iOS a pu suspendre la page (et son flux temps réel) ; le site se resynchronise tout de suite.
+    @objc private func becameActive() {
+        guard activatedOnce else { activatedOnce = true; return }
+        #if DEBUG
+        NSLog("DEYDAR-SELFTEST resync foreground")
+        #endif
+        runJS("window.__ddResync && window.__ddResync();")
     }
 
     private func showProgress(_ value: Double) {
@@ -367,6 +378,8 @@ extension WebViewController: WKNavigationDelegate {
             runJS(#"navigator.share({title: 'Deydar', url: location.href}).then(function () {}, function () {});"#)
         case "offline":
             showOffline()
+        case "push":
+            PushBridge.shared.handle(action: "status") { result in NSLog("DEYDAR-SELFTEST push status %@", (result["status"] as? String) ?? "?") }
         default:
             break
         }
@@ -521,6 +534,10 @@ extension WebViewController: WKScriptMessageHandler {
             )
         case "geoClear":
             location.clear(id: id)
+        case "push":
+            PushBridge.shared.handle(action: (body["action"] as? String) ?? "status") { [weak self] result in
+                self?.resolve(id, ok: true, payload: result)
+            }
         case "haptic":
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         default:
