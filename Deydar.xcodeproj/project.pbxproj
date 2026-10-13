@@ -16,6 +16,7 @@
 		D10000000000000000000036 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000026 /* Assets.xcassets */; };
 		D10000000000000000000037 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000028 /* PrivacyInfo.xcprivacy */; };
 		D10000000000000000000038 /* PushBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000029 /* PushBridge.swift */; };
+		D10000000000000000000039 /* CheckoutSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000000000000000000002B /* CheckoutSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		D10000000000000000000027 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D10000000000000000000028 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D10000000000000000000029 /* PushBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushBridge.swift; sourceTree = "<group>"; };
+		D1000000000000000000002B /* CheckoutSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutSession.swift; sourceTree = "<group>"; };
 		D1000000000000000000002A /* Deydar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Deydar.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				D10000000000000000000027 /* Info.plist */,
 				D10000000000000000000028 /* PrivacyInfo.xcprivacy */,
 				D10000000000000000000029 /* PushBridge.swift */,
+				D1000000000000000000002B /* CheckoutSession.swift */,
 				D1000000000000000000002A /* Deydar.entitlements */,
 			);
 			path = Deydar;
@@ -155,6 +158,7 @@
 				D10000000000000000000034 /* LocationBridge.swift in Sources */,
 				D10000000000000000000035 /* GoogleSignIn.swift in Sources */,
 				D10000000000000000000038 /* PushBridge.swift in Sources */,
+				D10000000000000000000039 /* CheckoutSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

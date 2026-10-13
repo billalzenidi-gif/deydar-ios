@@ -15,6 +15,7 @@ final class WebViewController: UIViewController {
     private let progress = UIProgressView(progressViewStyle: .bar)
     private let location = LocationBridge()
     private let google = GoogleSignIn()
+    private let checkout = CheckoutSession()
     private let pathMonitor = NWPathMonitor()
     private var progressObservation: NSKeyValueObservation?
     private var downloads: [WKDownload: URL] = [:]
@@ -257,6 +258,18 @@ final class WebViewController: UIViewController {
         if wasHidden { UIAccessibility.post(notification: .screenChanged, argument: offline) }
     }
 
+    /// Stripe Checkout dans la feuille Apple. Payé : la page du voyage s'ouvre (lien deydar://). Fermé sans payer : le site
+    /// rejoint la page du voyage (paiement à reprendre) ou, à défaut, se resynchronise.
+    private func openCheckout(_ url: URL) {
+        checkout.start(url, from: view.window) { [weak self] callback in
+            if let callback = callback {
+                NotificationCenter.default.post(name: .deydarOpenURL, object: callback)
+            } else {
+                self?.runJS("(window.__ddCheckoutClosed || window.__ddResync || function () {})(); window.__ddCheckoutClosed = null;")
+            }
+        }
+    }
+
     private func openExternally(_ url: URL) {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
@@ -311,6 +324,12 @@ extension WebViewController: WKNavigationDelegate {
             return
         }
         if scheme == "http" || scheme == "https" {
+            // Paiement Stripe : feuille sécurisée d'Apple, retour automatique dans l'app (CheckoutSession).
+            if CheckoutSession.handles(url), navigationAction.targetFrame?.isMainFrame ?? true {
+                decisionHandler(.cancel)
+                openCheckout(url)
+                return
+            }
             // Cadres intégrés (cartes, Google…) : chargés normalement.
             if let frame = navigationAction.targetFrame, !frame.isMainFrame {
                 decisionHandler(.allow)
@@ -451,7 +470,9 @@ extension WebViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         // Liens target="_blank" / window.open : nos pages dans l'app, le reste à l'extérieur.
         if let url = navigationAction.request.url {
-            if let host = url.host?.lowercased(), AppConfig.appHosts.contains(host) {
+            if CheckoutSession.handles(url) {
+                openCheckout(url)
+            } else if let host = url.host?.lowercased(), AppConfig.appHosts.contains(host) {
                 webView.load(URLRequest(url: url))
             } else {
                 openExternally(url)
