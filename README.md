@@ -36,6 +36,23 @@ Le simulateur marche aussi : choisis par exemple « iPhone 16 », puis ▶︎.
    - **Politique de confidentialité** : `https://deydar.com/privacy` ;
    - **Conditions d'utilisation** : `/terms`.
 
+### Sans Mac : envoi automatique vers TestFlight (GitHub Actions)
+
+Le workflow `.github/workflows/testflight.yml` archive l'app sur un Mac de GitHub, la fait signer par Apple
+(signature automatique, certificat de distribution géré par Apple), l'envoie à App Store Connect, puis l'ajoute
+au groupe externe « Amis testeurs » (celui du lien public) et la soumet à la Beta Review.
+
+1. Une seule fois, dans App Store Connect > **Utilisateurs et accès > Intégrations > API App Store Connect** :
+   demande l'accès, puis crée une **clé d'équipe** avec le rôle **Admin** et télécharge le fichier `AuthKey_XXXXXXXXXX.p8`
+   (téléchargeable une seule fois).
+2. Sur GitHub, **Settings > Secrets and variables > Actions > New repository secret** :
+   `ASC_KEY_ID` (ID de la clé), `ASC_ISSUER_ID` (ID de l'émetteur, en haut de la page des clés),
+   `ASC_KEY_P8` (tout le contenu du fichier `.p8`).
+3. **Actions > TestFlight > Run workflow**, avec le numéro de build (plus grand que le dernier envoyé).
+
+Sans les secrets, le workflow fait une répétition (archive non signée) pour vérifier la compilation.
+Le contrat Apple Developer à jour doit être accepté par le titulaire du compte, sinon Apple refuse l'envoi.
+
 Points de la relecture Apple à connaître :
 - **Règle 4.8** : une app qui propose « Continuer avec Google » doit aussi proposer « Se connecter avec Apple ».
   Le bouton Apple de Deydar indique pour l'instant « bientôt disponible ». À brancher avant la soumission.
@@ -59,3 +76,4 @@ Tout est dans `Deydar/AppConfig.swift` :
 | `LocationBridge.swift` | GPS (CoreLocation) |
 | `Assets.xcassets` | icône, logo et couleurs du démarrage |
 | `.github/workflows/ios.yml` | compilation automatique sur un Mac GitHub + captures du simulateur |
+| `.github/workflows/testflight.yml` | archive signée + envoi TestFlight + groupe « Amis testeurs » et Beta Review |

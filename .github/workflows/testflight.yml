@@ -1,0 +1,183 @@
+# Envoi de l'app vers TestFlight depuis un Mac de GitHub, sans Mac à la maison :
+#   1. archive signée par Apple (signature automatique + certificat de distribution géré par Apple,
+#      via la clé API App Store Connect : aucun certificat ni profil à gérer à la main) ;
+#   2. envoi à App Store Connect avec le numéro de build demandé ;
+#   3. (Linux, moins cher) attente du traitement par Apple, ajout du build au groupe de testeurs externes
+#      (« Amis testeurs » par défaut, celui du lien public) et soumission à la Beta Review.
+# Secrets du dépôt (Settings > Secrets and variables > Actions) :
+#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (contenu complet du fichier AuthKey_XXXXXXXXXX.p8).
+# Sans ces secrets : répétition (archive non signée) pour vérifier que l'app compile avec le bon Xcode.
+name: TestFlight
+
+on:
+  workflow_dispatch:
+    inputs:
+      build:
+        description: "Numéro de build (vide = numéro de cette exécution + 1). Doit être plus grand que le dernier envoyé."
+        required: false
+      group:
+        description: "Groupe TestFlight externe qui reçoit le build (vide = aucun, envoi seulement)"
+        required: false
+        default: "Amis testeurs"
+      notes:
+        description: "« À tester » affiché aux testeurs (anglais)"
+        required: false
+        default: "New build of Deydar for iPhone: push notifications, card payments in a secure Apple sheet, file downloads, native sharing and larger text support. Please try booking, messages and notifications, and send feedback with a screenshot from TestFlight."
+
+permissions:
+  contents: read
+
+concurrency:
+  group: testflight
+  cancel-in-progress: false
+
+env:
+  TEAM_ID: CKWU62DNSQ
+  APP_ID: "6820744362"
+
+jobs:
+  upload:
+    runs-on: macos-15
+    timeout-minutes: 60
+    outputs:
+      uploaded: ${{ steps.export.outputs.uploaded }}
+      build: ${{ steps.version.outputs.build }}
+      version: ${{ steps.version.outputs.version }}
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode 26 ou plus récent (version finale)
+        run: |
+          # App Store Connect refuse les builds d'un Xcode bêta et, depuis avril 2026, ceux faits sans le SDK iOS 26.
+          echo "Xcode installés :"
+          list=$(for x in /Applications/Xcode*.app; do
+            v=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$x/Contents/Info.plist" 2>/dev/null) || continue
+            b=$(/usr/libexec/PlistBuddy -c 'Print ProductBuildVersion' "$x/Contents/version.plist" 2>/dev/null) || continue
+            echo "  $x  $v ($b)" >&2
+            case "$b" in *[a-z]) continue ;; esac   # bêta : numéro de build terminé par une minuscule
+            [ "${v%%.*}" -ge 26 ] 2>/dev/null && echo "$v $x"
+          done | sort -V | tail -1)
+          X="${list#* }"
+          if [ -z "$list" ]; then echo "::error::Aucun Xcode 26+ final sur cette machine"; exit 1; fi
+          sudo xcode-select -s "$X/Contents/Developer"
+          xcodebuild -version
+          echo "SDK iOS : $(xcrun --sdk iphoneos --show-sdk-version)"
+
+      - name: Version et numéro de build
+        id: version
+        run: |
+          BUILD="${{ inputs.build }}"
+          [ -n "$BUILD" ] || BUILD=$(( GITHUB_RUN_NUMBER + 1 ))
+          VERSION=$(sed -n 's/.*MARKETING_VERSION = \(.*\);/\1/p' Deydar.xcodeproj/project.pbxproj | head -1)
+          echo "build=$BUILD" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Deydar $VERSION ($BUILD)"
+
+      - name: Clé API App Store Connect
+        id: key
+        run: |
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_KEY_P8" ]; then
+            echo "::warning::Secrets ASC_KEY_ID / ASC_ISSUER_ID / ASC_KEY_P8 absents : répétition sans signature ni envoi."
+            echo "ready=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          mkdir -p "$RUNNER_TEMP/private_keys"
+          KEY="$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          # Accepte le fichier .p8 tel quel ou encodé en base64.
+          if printf '%s' "$ASC_KEY_P8" | grep -q 'BEGIN PRIVATE KEY'; then printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          else printf '%s' "$ASC_KEY_P8" | base64 --decode > "$KEY"; fi
+          chmod 600 "$KEY"
+          echo "path=$KEY" >> "$GITHUB_OUTPUT"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Répétition (archive non signée)
+        if: steps.key.outputs.ready != 'true'
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Deydar.xcarchive" \
+            CURRENT_PROJECT_VERSION="${{ steps.version.outputs.build }}" CODE_SIGNING_ALLOWED=NO \
+            archive 2>&1 | tee archive.log | grep -E "error:|warning:|ARCHIVE" || true
+          test -d "$RUNNER_TEMP/Deydar.xcarchive/Products/Applications/Deydar.app"
+          echo "Répétition réussie. Ajoute les secrets ASC_* pour signer et envoyer à TestFlight."
+
+      - name: Archive signée
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Deydar.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "${{ steps.key.outputs.path }}" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="${{ steps.version.outputs.build }}" \
+            archive 2>&1 | tee archive.log | grep -E "error:|warning:|ARCHIVE" || true
+          test -d "$RUNNER_TEMP/Deydar.xcarchive/Products/Applications/Deydar.app"
+
+      - name: Envoi à App Store Connect
+        id: export
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>${TEAM_ID}</string>
+            <key>uploadSymbols</key><true/>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict>
+          </plist>
+          EOF
+          set -o pipefail
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Deydar.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "${{ steps.key.outputs.path }}" \
+            -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            2>&1 | tee export.log
+          echo "uploaded=true" >> "$GITHUB_OUTPUT"
+          echo "Build ${{ steps.version.outputs.version }} (${{ steps.version.outputs.build }}) envoyé : Apple le traite (10 à 30 min)."
+
+      - name: Journaux
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testflight-logs
+          path: |
+            archive.log
+            export.log
+          if-no-files-found: ignore
+
+      - name: Nettoyage de la clé
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/private_keys"
+
+  distribute:
+    needs: upload
+    if: needs.upload.outputs.uploaded == 'true' && inputs.group != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet "pyjwt[crypto]==2.9.0"
+      - name: Groupe de testeurs + Beta Review
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          BUILD: ${{ needs.upload.outputs.build }}
+          VERSION: ${{ needs.upload.outputs.version }}
+          GROUP: ${{ inputs.group }}
+          NOTES: ${{ inputs.notes }}
+        run: python .github/scripts/testflight_distribute.py
