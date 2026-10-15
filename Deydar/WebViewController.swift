@@ -1,11 +1,12 @@
 // Écran principal : le site Deydar dans une WKWebView réglée comme une app native.
 // Écran de démarrage, tirer pour actualiser, retour par balayage, liens externes ouverts dans Safari/l'app concernée,
 // boîtes de dialogue JavaScript natives, écran hors ligne avec « Réessayer », photos (caméra/photothèque) gérées par iOS,
-// pont natif (connexion Google, GPS, partage) via NativeBridge, fichiers téléchargés proposés à l'enregistrement (Fichiers),
+// pont natif (connexion Apple et Google, GPS, partage) via NativeBridge, fichiers téléchargés proposés à l'enregistrement (Fichiers),
 // reconnexion automatique quand le réseau revient, taille du texte iOS (Dynamic Type) appliquée au site.
 import UIKit
 import WebKit
 import Network
+import AuthenticationServices
 
 final class WebViewController: UIViewController {
     private var webView: WKWebView!
@@ -15,6 +16,7 @@ final class WebViewController: UIViewController {
     private let progress = UIProgressView(progressViewStyle: .bar)
     private let location = LocationBridge()
     private let google = GoogleSignIn()
+    private let apple = AppleSignIn()
     private let checkout = CheckoutSession()
     private let pathMonitor = NWPathMonitor()
     private var progressObservation: NSKeyValueObservation?
@@ -23,6 +25,9 @@ final class WebViewController: UIViewController {
     private var splashHidden = false
     private var textPercent = 100
     private var activatedOnce = false
+    private var appleRevokedPending = false
+    private var appleRevokedUser = ""
+    private var appleRevokedLoop = false
 
     #if DEBUG
     private var selfTestDone = false
@@ -114,6 +119,7 @@ final class WebViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(openDeepLink(_:)), name: .deydarOpenURL, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applyTextSize), name: UIContentSizeCategory.didChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(becameActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appleCredentialRevokedNotification), name: ASAuthorizationAppleIDProvider.credentialRevokedNotification, object: nil)
         applyTextSize()
 
         // Le réseau revient pendant que l'écran hors ligne est affiché : nouvel essai automatique.
@@ -137,6 +143,7 @@ final class WebViewController: UIViewController {
         }
         #endif
         load(start)
+        checkAppleCredential()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .darkContent }
@@ -173,6 +180,66 @@ final class WebViewController: UIViewController {
         NSLog("DEYDAR-SELFTEST resync foreground")
         #endif
         runJS("window.__ddResync && window.__ddResync();")
+        checkAppleCredential()
+    }
+
+    // MARK: Se connecter avec Apple : révocation
+
+    /// Identifiant Apple retiré par l'utilisateur (Réglages > Mot de passe et sécurité > Apps utilisant l'identifiant Apple)
+    /// ou inconnu d'Apple : la session Deydar ouverte avec Apple est fermée (règle d'Apple). Vérifié au lancement et au retour
+    /// au premier plan ; rien n'est fait si Apple ne répond pas (réseau).
+    private func checkAppleCredential() {
+        guard let userID = UserDefaults.standard.string(forKey: AppleSignIn.storedUserKey), !userID.isEmpty else { return }
+        AppleSignIn.checkCredential(userID: userID) { [weak self] state in
+            guard let state = state, state == .revoked || state == .notFound else { return }
+            // Nouvelle connexion Apple entre-temps (autre identifiant) : on ne touche à rien.
+            guard UserDefaults.standard.string(forKey: AppleSignIn.storedUserKey) == userID else { return }
+            self?.appleCredentialRevoked()
+        }
+    }
+
+    @objc private func appleCredentialRevokedNotification() {
+        DispatchQueue.main.async { [weak self] in
+            guard UserDefaults.standard.string(forKey: AppleSignIn.storedUserKey) != nil else { return }
+            self?.appleCredentialRevoked()
+        }
+    }
+
+    private func appleCredentialRevoked() {
+        // Identifiant révoqué transmis au site : seule la session liée à CET identifiant Apple est fermée.
+        appleRevokedUser = UserDefaults.standard.string(forKey: AppleSignIn.storedUserKey) ?? ""
+        UserDefaults.standard.removeObject(forKey: AppleSignIn.storedUserKey)
+        appleRevokedPending = true
+        deliverAppleRevoked()
+    }
+
+    /// Prévient le site (window.__ddAppleRevoked) ; au lancement la page n'est pas encore prête : nouvel essai toutes les
+    /// 0,5 s pendant 20 s au plus, puis de nouveau à la fin du prochain chargement de page. Le site garde lui-même le signal :
+    /// livré dès que la fonction existe.
+    private func deliverAppleRevoked(attempt: Int = 0) {
+        guard appleRevokedPending, isViewLoaded, webView != nil else { appleRevokedLoop = false; return }
+        if attempt == 0 {
+            guard !appleRevokedLoop else { return }
+            appleRevokedLoop = true
+        }
+        // Identifiant en littéral de chaîne JS sûr (JSON).
+        var sub = "''"
+        if let data = try? JSONSerialization.data(withJSONObject: appleRevokedUser, options: [.fragmentsAllowed]),
+           let text = String(data: data, encoding: .utf8) {
+            sub = text
+        }
+        let js = "(function () { if (typeof window.__ddAppleRevoked !== 'function') return false; try { window.__ddAppleRevoked(\(sub)); } catch (e) {} return true; })()"
+        webView.evaluateJavaScript(js) { [weak self] result, _ in
+            guard let self = self else { return }
+            if (result as? NSNumber)?.boolValue == true {
+                self.appleRevokedPending = false
+                self.appleRevokedLoop = false
+            } else if attempt >= 40 {
+                self.appleRevokedLoop = false
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { self.deliverAppleRevoked(attempt: attempt + 1) }
+            }
+        }
     }
 
     private func showProgress(_ value: Double) {
@@ -373,6 +440,7 @@ extension WebViewController: WKNavigationDelegate {
         offline.isHidden = true
         if let url = webView.url { lastURL = url }
         hideSplashWhenRendered()
+        if appleRevokedPending { deliverAppleRevoked() }
         #if DEBUG
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in self?.runSelfTest() }
         #endif
@@ -386,7 +454,7 @@ extension WebViewController: WKNavigationDelegate {
         selfTestDone = true
         NSLog("DEYDAR-SELFTEST filename %@", Self.safeFilename("../a/b:c?.json"))
         NSLog("DEYDAR-SELFTEST textsize %@ text %ld%%", UIApplication.shared.preferredContentSizeCategory.rawValue, textPercent)
-        let probe = #"JSON.stringify({share: typeof navigator.share, canShareUrl: !!(navigator.canShare && navigator.canShare({url: 'https://deydar.com'})), canShareFiles: !!(navigator.canShare && navigator.canShare({files: [1]})), native: !!window.DeydarNative, textAdjust: getComputedStyle(document.documentElement).webkitTextSizeAdjust, overflow: document.documentElement.scrollWidth > window.innerWidth + 1})"#
+        let probe = #"JSON.stringify({share: typeof navigator.share, canShareUrl: !!(navigator.canShare && navigator.canShare({url: 'https://deydar.com'})), canShareFiles: !!(navigator.canShare && navigator.canShare({files: [1]})), native: !!window.DeydarNative, apple: typeof (window.DeydarNative || {}).appleSignIn, textAdjust: getComputedStyle(document.documentElement).webkitTextSizeAdjust, overflow: document.documentElement.scrollWidth > window.innerWidth + 1})"#
         webView.evaluateJavaScript(probe) { result, error in
             NSLog("DEYDAR-SELFTEST bridge %@", (result as? String) ?? String(describing: error))
         }
@@ -545,6 +613,25 @@ extension WebViewController: WKScriptMessageHandler {
                     self?.resolve(id, ok: false, payload: reason)
                 }
             }
+        case "apple":
+            // Se connecter avec Apple : le site envoie ensuite le jeton au serveur (POST /api/auth/apple).
+            apple.signIn(from: view.window) { [weak self] result in
+                switch result {
+                case .success(let credential):
+                    if let user = credential["user"] as? String, !user.isEmpty {
+                        UserDefaults.standard.set(user, forKey: AppleSignIn.storedUserKey)
+                    }
+                    self?.appleRevokedPending = false
+                    self?.resolve(id, ok: true, payload: credential)
+                case .failure(.cancelled):
+                    self?.resolve(id, ok: false, payload: "cancelled")
+                case .failure(.failed(let reason)):
+                    self?.resolve(id, ok: false, payload: reason)
+                }
+            }
+        case "appleSignedOut":
+            // Déconnexion sur le site : l'identifiant Apple mémorisé n'est plus surveillé (pas de révocation pour le compte suivant).
+            UserDefaults.standard.removeObject(forKey: AppleSignIn.storedUserKey)
         case "geo":
             location.request(
                 id: id,

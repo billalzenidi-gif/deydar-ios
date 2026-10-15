@@ -5,6 +5,7 @@ App iPhone de Deydar. Elle affiche le site Deydar hébergé sur le VPS **brazil*
 
 - **Toutes les fonctions et API du site** : comptes, recherche, réservations, messages, espace hôte, 8 langues, etc.
   Chaque mise à jour publiée sur le VPS (`bash deploy/vps.sh`) arrive **immédiatement** dans l'app, sans republier sur l'App Store.
+- **Se connecter avec Apple natif** (version 2.0) : la feuille système d'Apple (Face ID / Touch ID), au-dessus du bouton Google.
 - **Connexion Google native** : la feuille sécurisée d'iOS, avec le client OAuth « Deydar iOS » du projet Google Cloud `deydar`.
 - **GPS natif** (CoreLocation) pour « Près de moi » : une seule demande d'autorisation, celle d'iOS.
 - **Photos** : caméra ou photothèque pour les annonces, les véhicules et les documents.
@@ -55,14 +56,44 @@ Le contrat Apple Developer à jour doit être accepté par le titulaire du compt
 
 Points de la relecture Apple à connaître :
 - **Règle 4.8** : une app qui propose « Continuer avec Google » doit aussi proposer « Se connecter avec Apple ».
-  Le bouton Apple de Deydar indique pour l'instant « bientôt disponible ». À brancher avant la soumission.
+  C'est fait depuis la version 2.0 (voir « Se connecter avec Apple » plus bas). L'app 1.0 déjà installée ne montre
+  aucun bouton social (ni Apple ni Google) : le site ne les affiche que si `DeydarNative.appleSignIn` existe.
+- **Règle 5.1.1(v)** : la suppression du compte se fait dans l'app (Profil > Supprimer le compte) ; pour un compte
+  Apple, le serveur révoque aussi les jetons Apple.
 - **Règle 4.2** : Apple refuse les apps qui ne sont qu'un site web. Deydar a de vraies fonctions natives
   (GPS, appareil photo, connexion native, mode hors ligne), ce qui aide. Garde-les en avant dans la description.
+
+## Se connecter avec Apple (version 2.0)
+
+Dans l'app, le bouton « Continuer avec Apple » ouvre la feuille native d'Apple (`AppleSignIn.swift`). L'app crée un
+nonce aléatoire, Apple renvoie un jeton d'identité signé qui en contient l'empreinte SHA-256, et le site l'envoie au
+serveur (`POST /api/auth/apple`), qui vérifie la signature d'Apple, l'audience et le nonce avant d'ouvrir la session.
+Au lancement et au retour au premier plan, l'app vérifie que l'identifiant Apple n'a pas été retiré
+(Réglages > Mot de passe et sécurité) ; s'il l'a été, le site déconnecte le compte (`window.__ddAppleRevoked`).
+
+Une seule fois, dans le portail **Apple Developer > Certificates, Identifiers & Profiles** :
+
+1. **Identifiers > App IDs > `com.deydar.app`** : coche **Sign in with Apple** (« Enable as a primary App ID ») et
+   **Push Notifications**, puis **Save**. Le fichier `Deydar.entitlements` contient déjà les deux droits
+   (`com.apple.developer.applesignin` = Default, `aps-environment`).
+2. **Identifiers > Services IDs** : crée `com.deydar.web` (connexion Apple sur le **site**), coche Sign in with Apple,
+   **Configure** : App ID principal `com.deydar.app`, domaine `deydar.com`, adresse de retour
+   `https://deydar.com/api/auth/apple/callback`.
+3. **Keys** : crée une clé avec **Sign in with Apple** (App ID principal `com.deydar.app`) et **Apple Push Notifications
+   service (APNs)**, télécharge le fichier `AuthKey_XXXXXXXXXX.p8` (une seule fois). Elle sert au serveur pour révoquer les
+   jetons Apple à la suppression d'un compte et pour envoyer les notifications push.
+4. Sur le VPS, pose les réglages avec `deydar-apple-setup` (Team ID `CKWU62DNSQ`, Key ID, fichier `.p8`,
+   `APPLE_BUNDLE_ID=com.deydar.app`, `APPLE_SERVICES_ID=com.deydar.web`). Sans `APPLE_SERVICES_ID`, le bouton Apple
+   reste caché sur le site ; il marche quand même dans l'app.
+
+Pour la relecture Apple : le compte de démonstration (e-mail + mot de passe) reste nécessaire dans App Store Connect,
+les relecteurs peuvent aussi essayer « Continuer avec Apple » avec leur propre identifiant.
 
 ## Réglages
 
 Tout est dans `Deydar/AppConfig.swift` :
-- `baseURL` : l'adresse du site. Si tu passes sur un vrai nom de domaine, change-la ici et ajoute-la aussi dans `appHosts`.
+- `baseURL` : l'adresse du site (`https://deydar.com`). Si elle change, change-la ici et ajoute le domaine dans `appHosts`
+  (aujourd'hui `deydar.com` et `www.deydar.com` seulement).
 - `googleClientID` : le client OAuth iOS. Il n'est pas secret.
 
 ## Fichiers
@@ -71,8 +102,11 @@ Tout est dans `Deydar/AppConfig.swift` :
 |---|---|
 | `DeydarApp.swift` | point d'entrée (SwiftUI) |
 | `WebViewController.swift` | vue web, navigation, alertes, hors ligne, pont natif |
-| `NativeBridge.swift` | script injecté : `window.DeydarNative`, GPS, langue |
+| `NativeBridge.swift` | script injecté : `window.DeydarNative` (Apple, Google, push), GPS, partage, langue |
+| `AppleSignIn.swift` | Se connecter avec Apple (AuthenticationServices, nonce SHA-256, contrôle de révocation) |
 | `GoogleSignIn.swift` | connexion Google (ASWebAuthenticationSession + PKCE) |
+| `CheckoutSession.swift` | paiement Stripe dans la feuille sécurisée d'Apple |
+| `PushBridge.swift` | notifications push (APNs) |
 | `LocationBridge.swift` | GPS (CoreLocation) |
 | `Assets.xcassets` | icône, logo et couleurs du démarrage |
 | `.github/workflows/ios.yml` | compilation automatique sur un Mac GitHub + captures du simulateur |

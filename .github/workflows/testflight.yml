@@ -22,7 +22,7 @@ on:
       notes:
         description: "« À tester » affiché aux testeurs (anglais)"
         required: false
-        default: "New build of Deydar for iPhone: push notifications, card payments in a secure Apple sheet, file downloads, native sharing and larger text support. Please try booking, messages and notifications, and send feedback with a screenshot from TestFlight."
+        default: "Deydar 2.0 for iPhone: Sign in with Apple (native), plus Google sign-in, push notifications, card payments in a secure Apple sheet, file downloads and native sharing. Please try signing in with Apple, booking and messages, and send feedback with a screenshot from TestFlight."
 
 permissions:
   contents: read

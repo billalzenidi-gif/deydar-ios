@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!-- Notifications push (APNs). Xcode passe automatiquement en « production » pour TestFlight et l'App Store ;
-     l'identifiant d'app com.deydar.app doit avoir la capacité « Push Notifications » (portail Apple Developer). -->
+     l'identifiant d'app com.deydar.app doit avoir les capacités « Push Notifications » et « Sign in with Apple »
+     (portail Apple Developer > Identifiers). -->
 <plist version="1.0">
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 </dict>
 </plist>

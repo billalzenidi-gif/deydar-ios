@@ -112,6 +112,7 @@ jobs:
             check '"canShareUrl":true' "navigator.canShare(url) = vrai"
             check '"canShareFiles":false' "navigator.canShare(fichiers) = faux (non pris en charge)"
             check '"native":true' "window.DeydarNative présent"
+            check '"apple":"function"' "DeydarNative.appleSignIn présent (Se connecter avec Apple natif)"
             check 'AccessibilityL text 130%' "texte très grand : réglage iOS lu (130 %)"
             check '"textAdjust":"130%","overflow":false' "texte très grand : texte du site agrandi, aucun débordement horizontal"
             check '"textAdjust":"100%","overflow":false' "taille normale : aucun débordement horizontal"

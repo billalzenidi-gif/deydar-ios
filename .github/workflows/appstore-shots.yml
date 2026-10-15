@@ -1,0 +1,101 @@
+# Captures App Store (iPhone 6,9 pouces, 1320 x 2868) de la version en cours, prises dans le simulateur d'un Mac de GitHub
+# avec l'app compilée depuis ce dépôt et le site en production (https://deydar.com). Barre d'état propre (9:41, réseau plein,
+# batterie pleine), position simulée à Oran. Résultats : branche « appstore-shots » + artefact.
+name: App Store screenshots
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  shots:
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      BID: com.deydar.app
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode 26 ou plus récent (version finale)
+        run: |
+          list=$(for x in /Applications/Xcode*.app; do
+            v=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$x/Contents/Info.plist" 2>/dev/null) || continue
+            b=$(/usr/libexec/PlistBuddy -c 'Print ProductBuildVersion' "$x/Contents/version.plist" 2>/dev/null) || continue
+            [[ "$b" =~ [a-z]$ ]] && continue
+            [ "${v%%.*}" -ge 26 ] 2>/dev/null && echo "$v $x"
+          done | sort -V | tail -1)
+          [ -n "$list" ] || { echo "::error::Aucun Xcode 26+ final"; exit 1; }
+          sudo xcode-select -s "${list#* }/Contents/Developer"
+          xcodebuild -version
+
+      - name: iPhone Pro Max (6,9 pouces) sous le runtime iOS le plus récent
+        run: |
+          RT=$(xcrun simctl list runtimes --json | python3 -c "
+          import json, sys
+          rs = [r for r in json.load(sys.stdin)['runtimes'] if '.iOS-' in r['identifier'] and r.get('isAvailable')]
+          rs.sort(key=lambda r: [int(x) for x in r['version'].split('.')])
+          print(rs[-1]['identifier'] if rs else '')")
+          [ -n "$RT" ] || xcodebuild -downloadPlatform iOS
+          RT=${RT:-$(xcrun simctl list runtimes --json | python3 -c "import json,sys; print([r['identifier'] for r in json.load(sys.stdin)['runtimes'] if '.iOS-' in r['identifier']][-1])")}
+          DT=$(xcrun simctl list runtimes --json | python3 -c "
+          import json, sys, os, re
+          rt = next(r for r in json.load(sys.stdin)['runtimes'] if r['identifier'] == '$RT')
+          ph = [d for d in rt.get('supportedDeviceTypes', []) if d['name'].startswith('iPhone') and 'Pro Max' in d['name']]
+          num = lambda d: int((re.search(r'iPhone (\d+)', d['name']) or [0, 0])[1])
+          ph.sort(key=num)
+          print(ph[-1]['identifier'])")
+          UDID=$(xcrun simctl create "Deydar Pro Max" "$DT" "$RT")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          mkdir -p out && xcrun simctl list devices | grep -F "$UDID" | tee out/0-simulateur.txt
+
+      - name: Compilation (simulateur)
+        run: |
+          set -o pipefail
+          xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build-sim.log | grep -E "error:|BUILD" || true
+          test -d build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+      - name: Captures
+        run: |
+          APP=build/Build/Products/Debug-iphonesimulator/Deydar.app
+          SID=$(curl -s 'https://deydar.com/api/stays?sort=rating' -H 'x-deydar: 1' | python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['id'])" || echo '')
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" appearance light || true
+          xcrun simctl status_bar "$UDID" override --time "9:41" --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100 || true
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl location "$UDID" set 35.6971,-0.6308 || true
+          xcrun simctl privacy "$UDID" grant location "$BID" || true
+          sleep 3
+          shot() { xcrun simctl io "$UDID" screenshot --type=png "out/$1.png"; }
+          open_at() { xcrun simctl terminate "$UDID" "$BID" 2>/dev/null || true; sleep 1; xcrun simctl launch "$UDID" "$BID" "$@" >/dev/null; }
+          open_at;                                       sleep 25; shot 01-accueil
+          open_at -DeydarStartPath "/?near=1";           sleep 25; shot 02-pres-de-moi
+          [ -n "$SID" ] && { open_at -DeydarStartPath "/stays/$SID"; sleep 22; shot 03-logement; }
+          open_at -DeydarStartPath "/signin";            sleep 18; shot 04-connexion
+          open_at -DeydarStartPath "/help";              sleep 18; shot 05-aide
+          xcrun simctl terminate "$UDID" "$BID" || true
+          xcrun simctl uninstall "$UDID" "$BID"
+          xcrun simctl install "$UDID" "$APP"
+          xcrun simctl privacy "$UDID" grant location "$BID" || true
+          open_at -AppleLanguages "(fr)" -AppleLocale fr_FR;  sleep 25; shot 06-accueil-fr
+          for f in out/*.png; do sips -g pixelWidth -g pixelHeight "$f" | tail -2 | tr '\n' ' '; echo " $f"; done | tee out/0-tailles.txt
+
+      - name: Publication (branche appstore-shots)
+        if: always()
+        run: |
+          D="$RUNNER_TEMP/pubrepo"; rm -rf "$D"; mkdir -p "$D"; cp -R out/. "$D/"; cd "$D"
+          git init -q && git checkout -q -b appstore-shots
+          git config user.name deydar-ci && git config user.email deydar-ci@users.noreply.github.com
+          git add -A && git commit -qm "Captures App Store ($GITHUB_SHA)"
+          git push -qf "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" appstore-shots
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appstore-shots
+          path: out

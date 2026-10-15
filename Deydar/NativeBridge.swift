@@ -1,5 +1,5 @@
 // Script injecté dans le site au chargement de chaque page (avant ses propres scripts) :
-// - window.DeydarNative : pont vers l'app (connexion Google native, vibration),
+// - window.DeydarNative : pont vers l'app (connexion Apple et Google natives, vibration),
 // - navigator.geolocation et navigator.permissions branchés sur CoreLocation (une seule demande d'autorisation, celle d'iOS),
 // - navigator.share branché sur la feuille de partage iOS,
 // - notifications push (DeydarNative.push : autorisation et jeton APNs, inscrits ensuite par le site),
@@ -46,9 +46,13 @@ enum NativeBridge {
         platform: 'ios',
         version: '__VERSION__',
         googleSignIn: function () { return call('google'); },
+        // Se connecter avec Apple (app 2.0+) → { identityToken, authorizationCode, nonce, user, email, givenName, familyName }
+        appleSignIn: function () { return call('apple'); },
         // Notifications push : 'status' | 'refresh' | 'register' → { status, token?, env? }
         push: function (action) { return call('push', { action: action || 'status' }); },
-        haptic: function () { bridge.postMessage({ type: 'haptic' }); }
+        haptic: function () { bridge.postMessage({ type: 'haptic' }); },
+        // Déconnexion du site : l'app oublie l'identifiant Apple mémorisé (sans réponse).
+        appleSignedOut: function () { bridge.postMessage({ type: 'appleSignedOut' }); }
       };
 
       // navigator.share → feuille de partage iOS (textes et liens ; pas de fichiers).

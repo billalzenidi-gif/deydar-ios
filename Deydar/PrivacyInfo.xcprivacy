@@ -3,9 +3,11 @@
 <!--
   Manifeste de confidentialité de l'app Deydar (exigé par Apple depuis 2024).
   - Aucun pistage (NSPrivacyTracking = false), aucun domaine de pistage, aucun SDK tiers.
-  - API « à justifier » : UserDefaults (réglage de test DeydarStartPath, compilations Debug seulement) → CA92.1.
+  - API « à justifier » : UserDefaults (identifiant « Se connecter avec Apple » dd_apple_user pour détecter sa révocation ;
+    réglages de test DeydarStartPath/DeydarSelfTest, compilations Debug seulement) → CA92.1 (données de l'app elle-même).
   - Données collectées : celles que le compte Deydar demande dans l'app (site deydar.com affiché par l'app),
     toutes liées au compte, jamais utilisées pour du pistage, uniquement pour le fonctionnement du service.
+    Localisation approximative : ville estimée par le serveur à partir de l'adresse IP (« Ma position » sans GPS), non liée au compte.
     Les étiquettes « Confidentialité de l'app » dans App Store Connect doivent rester identiques à cette liste.
 -->
 <plist version="1.0">
@@ -80,6 +82,18 @@
 			<string>NSPrivacyCollectedDataTypePreciseLocation</string>
 			<key>NSPrivacyCollectedDataTypeLinked</key>
 			<true/>
+			<key>NSPrivacyCollectedDataTypeTracking</key>
+			<false/>
+			<key>NSPrivacyCollectedDataTypePurposes</key>
+			<array>
+				<string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
+			</array>
+		</dict>
+		<dict>
+			<key>NSPrivacyCollectedDataType</key>
+			<string>NSPrivacyCollectedDataTypeCoarseLocation</string>
+			<key>NSPrivacyCollectedDataTypeLinked</key>
+			<false/>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
 			<false/>
 			<key>NSPrivacyCollectedDataTypePurposes</key>
