@@ -1,0 +1,6 @@
+  pixelWidth: 1320   pixelHeight: 2868  out/01-accueil.png
+  pixelWidth: 1320   pixelHeight: 2868  out/02-pres-de-moi.png
+  pixelWidth: 1320   pixelHeight: 2868  out/03-logement.png
+  pixelWidth: 1320   pixelHeight: 2868  out/04-connexion.png
+  pixelWidth: 1320   pixelHeight: 2868  out/05-aide.png
+  pixelWidth: 1320   pixelHeight: 2868  out/06-accueil-fr.png
