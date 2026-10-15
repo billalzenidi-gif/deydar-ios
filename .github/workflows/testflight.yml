@@ -129,7 +129,7 @@ jobs:
           <plist version="1.0">
           <dict>
             <key>method</key><string>app-store-connect</string>
-            <key>destination</key><string>upload</string>
+            <key>destination</key><string>export</string>
             <key>signingStyle</key><string>automatic</string>
             <key>teamID</key><string>${TEAM_ID}</string>
             <key>uploadSymbols</key><true/>
@@ -144,6 +144,14 @@ jobs:
             -authenticationKeyPath "${{ steps.key.outputs.path }}" \
             -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
             2>&1 | tee export.log
+          # Envoi par altool (outil d'Apple) avec la même clé : l'envoi direct de xcodebuild (« store configuration ») refuse
+          # la clé (« Cannot verify client's JWT headers ») alors que l'API App Store Connect l'accepte (workflow asc-check).
+          IPA=$(ls "$RUNNER_TEMP"/export/*.ipa | head -1)
+          test -f "$IPA" || { echo "::error::Aucun .ipa exporté"; exit 1; }
+          mkdir -p "$HOME/.appstoreconnect/private_keys" && cp "${{ steps.key.outputs.path }}" "$HOME/.appstoreconnect/private_keys/"
+          xcrun altool --upload-app --type ios --file "$IPA" --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID" --output-format normal 2>&1 | tee upload.log
+          grep -qiE "No errors uploading|UPLOAD SUCCEEDED|successfully uploaded" upload.log || { echo "::error::Envoi refusé par Apple (voir upload.log)"; exit 1; }
+          rm -rf "$HOME/.appstoreconnect/private_keys"
           echo "uploaded=true" >> "$GITHUB_OUTPUT"
           echo "Build ${{ steps.version.outputs.version }} (${{ steps.version.outputs.build }}) envoyé : Apple le traite (10 à 30 min)."
 
@@ -155,6 +163,7 @@ jobs:
           path: |
             archive.log
             export.log
+            upload.log
           if-no-files-found: ignore
 
       - name: Nettoyage de la clé
