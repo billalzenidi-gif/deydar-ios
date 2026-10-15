@@ -1,0 +1,451 @@
+Command line invocation:
+    /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/xcodebuild -project Deydar.xcodeproj -scheme Deydar -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+    SDKROOT = iphonesimulator18.5
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'Deydar' in project 'Deydar' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/runner/work/deydar-ios/deydar-ios/Deydar/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: a849188f43fb7b7fe5077a5b43aeae85
+Build description path: /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/XCBuildData/a849188f43fb7b7fe5077a5b43aeae85.xcbuilddata
+ClangStatCache /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache
+    cd /Users/runner/work/deydar-ios/deydar-ios/Deydar.xcodeproj
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -o /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache
+
+CreateBuildDirectory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products
+    cd /Users/runner/work/deydar-ios/deydar-ios/Deydar.xcodeproj
+    builtin-create-build-directory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products
+
+CreateBuildDirectory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex
+    cd /Users/runner/work/deydar-ios/deydar-ios/Deydar.xcodeproj
+    builtin-create-build-directory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex
+
+CreateBuildDirectory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator
+    cd /Users/runner/work/deydar-ios/deydar-ios/Deydar.xcodeproj
+    builtin-create-build-directory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar-b7e8a61516b87b1165742b6db19c1aa4-VFS-iphonesimulator/all-product-headers.yaml
+    cd /Users/runner/work/deydar-ios/deydar-ios/Deydar.xcodeproj
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar-b7e8a61516b87b1165742b6db19c1aa4-VFS-iphonesimulator/all-product-headers.yaml
+
+CreateBuildDirectory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+    cd /Users/runner/work/deydar-ios/deydar-ios/Deydar.xcodeproj
+    builtin-create-build-directory /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_const_extract_protocols.json (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftConstValuesFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.LinkFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.LinkFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-OutputFileMap.json (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_const_extract_protocols.json (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftConstValuesFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.LinkFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.LinkFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-OutputFileMap.json (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.hmap (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.hmap
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyStaticMetadataFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyMetadataFileList (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-non-framework-target-headers.hmap (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibPath-normal-x86_64.txt (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibPath-normal-x86_64.txt
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibPath-normal-arm64.txt (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibInstallName-normal-x86_64.txt (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibInstallName-normal-x86_64.txt
+
+WriteAuxiliaryFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibInstallName-normal-arm64.txt (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    write-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibInstallName-normal-arm64.txt
+
+MkDir /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /bin/mkdir -p /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+Ld /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/__preview.dylib normal x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target x86_64-apple-ios16.0-simulator -dynamiclib -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -O0 -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -install_name @rpath/Deydar.debug.dylib -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_dependency_info.dat -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/__preview.dylib
+
+Ld /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/__preview.dylib normal arm64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0-simulator -dynamiclib -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -O0 -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -install_name @rpath/Deydar.debug.dylib -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_dependency_info.dat -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/__preview.dylib
+
+MkDir /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/unthinned (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /bin/mkdir -p /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/unthinned
+
+MkDir /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /bin/mkdir -p /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned
+
+GenerateAssetSymbols /Users/runner/work/deydar-ios/deydar-ios/Deydar/Assets.xcassets (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool /Users/runner/work/deydar-ios/deydar-ios/Deydar/Assets.xcassets --compile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_dependencies --output-partial-info-plist /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist --app-icon AppIcon --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --minimum-deployment-target 16.0 --platform iphonesimulator --bundle-identifier com.deydar.app --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.h
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+CreateUniversalBinary /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/__preview.dylib normal arm64\ x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo -create /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/__preview.dylib /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/__preview.dylib -output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/__preview.dylib
+
+CpResource /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/PrivacyInfo.xcprivacy /Users/runner/work/deydar-ios/deydar-ios/Deydar/PrivacyInfo.xcprivacy (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/deydar-ios/deydar-ios/Deydar/PrivacyInfo.xcprivacy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+CompileAssetCatalogVariant thinned /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app /Users/runner/work/deydar-ios/deydar-ios/Deydar/Assets.xcassets (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/actool /Users/runner/work/deydar-ios/deydar-ios/Deydar/Assets.xcassets --compile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --minimum-deployment-target 16.0 --platform iphonesimulator
+/* com.apple.actool.compilation-results */
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist_thinned
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned/AppIcon60x60@2x.png
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned/AppIcon76x76@2x~ipad.png
+/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned/Assets.car
+
+
+SwiftDriver Deydar normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-SwiftDriver -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Deydar -Onone -enforce-exclusivity\=checked @/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target x86_64-apple-ios16.0-simulator -g -module-cache-path /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/work/deydar-ios/deydar-ios/build/Index.noindex/DataStore -swift-version 5 -I /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache -output-file-map /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources-normal/x86_64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/x86_64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-Swift.h -working-directory /Users/runner/work/deydar-ios/deydar-ios -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver Deydar normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-SwiftDriver -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Deydar -Onone -enforce-exclusivity\=checked @/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios16.0-simulator -g -module-cache-path /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/work/deydar-ios/deydar-ios/build/Index.noindex/DataStore -swift-version 5 -I /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache -output-file-map /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-Swift.h -working-directory /Users/runner/work/deydar-ios/deydar-ios -experimental-emit-module-separately -disable-cmo
+
+SwiftEmitModule normal x86_64 Emitting\ module\ for\ Deydar (in target 'Deydar' from project 'Deydar')
+
+EmitSwiftModule normal x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Deydar (in target 'Deydar' from project 'Deydar')
+
+EmitSwiftModule normal arm64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 Compiling\ LocationBridge.swift,\ GoogleSignIn.swift,\ PushBridge.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/LocationBridge.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/GoogleSignIn.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/PushBridge.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/LocationBridge.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/GoogleSignIn.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/PushBridge.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftDriverJobDiscovery normal x86_64 Emitting module for Deydar (in target 'Deydar' from project 'Deydar')
+
+SwiftCompile normal arm64 Compiling\ DeydarApp.swift,\ AppConfig.swift,\ WebViewController.swift,\ NativeBridge.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/DeydarApp.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppConfig.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/WebViewController.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/NativeBridge.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/DeydarApp.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppConfig.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/WebViewController.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/NativeBridge.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for Deydar (in target 'Deydar' from project 'Deydar')
+
+SwiftDriver\ Compilation\ Requirements Deydar normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Deydar -Onone -enforce-exclusivity\=checked @/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target x86_64-apple-ios16.0-simulator -g -module-cache-path /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/work/deydar-ios/deydar-ios/build/Index.noindex/DataStore -swift-version 5 -I /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache -output-file-map /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources-normal/x86_64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/x86_64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-Swift.h -working-directory /Users/runner/work/deydar-ios/deydar-ios -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling LocationBridge.swift, GoogleSignIn.swift, PushBridge.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftDriver\ Compilation\ Requirements Deydar normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Deydar -Onone -enforce-exclusivity\=checked @/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios16.0-simulator -g -module-cache-path /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/work/deydar-ios/deydar-ios/build/Index.noindex/DataStore -swift-version 5 -I /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache -output-file-map /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-Swift.h -working-directory /Users/runner/work/deydar-ios/deydar-ios -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal x86_64 Compiling\ CheckoutSession.swift,\ AppleSignIn.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/CheckoutSession.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppleSignIn.swift /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Deydar' from project 'Deydar')
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/CheckoutSession.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppleSignIn.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftMergeGeneratedHeaders /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/Deydar-Swift.h /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-Swift.h /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-Swift.h (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-swiftHeaderTool -arch arm64 /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-Swift.h -arch x86_64 /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-Swift.h -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/Deydar-Swift.h
+
+SwiftDriverJobDiscovery normal arm64 Compiling DeydarApp.swift, AppConfig.swift, WebViewController.swift, NativeBridge.swift (in target 'Deydar' from project 'Deydar')
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/x86_64-apple-ios-simulator.swiftmodule /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftmodule (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftmodule /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/x86_64-apple-ios-simulator.swiftmodule
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/x86_64-apple-ios-simulator.swiftdoc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftdoc (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftdoc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/x86_64-apple-ios-simulator.swiftdoc
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/x86_64-apple-ios-simulator.abi.json /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.abi.json (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.abi.json /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/x86_64-apple-ios-simulator.abi.json
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftmodule (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftmodule /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/arm64-apple-ios-simulator.swiftdoc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftdoc (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftdoc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/arm64-apple-ios-simulator.abi.json /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.abi.json (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.abi.json /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftsourceinfo (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftsourceinfo /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo
+
+Copy /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftsourceinfo (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftsourceinfo /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftCompile normal x86_64 Compiling\ DeydarApp.swift,\ AppConfig.swift,\ WebViewController.swift,\ NativeBridge.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/DeydarApp.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppConfig.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/WebViewController.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/NativeBridge.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/DeydarApp.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppConfig.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/WebViewController.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/NativeBridge.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 Compiling\ LocationBridge.swift,\ GoogleSignIn.swift,\ PushBridge.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/LocationBridge.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/GoogleSignIn.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/PushBridge.swift (in target 'Deydar' from project 'Deydar')
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/LocationBridge.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/GoogleSignIn.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal x86_64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/PushBridge.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+LinkAssetCatalog /Users/runner/work/deydar-ios/deydar-ios/Deydar/Assets.xcassets (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-linkAssetCatalog --thinned /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/thinned --thinned-dependencies /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist_thinned --unthinned /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_output/unthinned --unthinned-dependencies /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist_unthinned --output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app --plist-output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist
+note: Emplaced /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/AppIcon60x60@2x.png (in target 'Deydar' from project 'Deydar')
+note: Emplaced /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/AppIcon76x76@2x~ipad.png (in target 'Deydar' from project 'Deydar')
+note: Emplaced /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Assets.car (in target 'Deydar' from project 'Deydar')
+
+SwiftDriverJobDiscovery normal x86_64 Compiling DeydarApp.swift, AppConfig.swift, WebViewController.swift, NativeBridge.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftCompile normal arm64 Compiling\ CheckoutSession.swift,\ AppleSignIn.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/CheckoutSession.swift /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppleSignIn.swift /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/CheckoutSession.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/Deydar/AppleSignIn.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftCompile normal arm64 /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    
+
+SwiftDriverJobDiscovery normal x86_64 Compiling CheckoutSession.swift, AppleSignIn.swift, GeneratedAssetSymbols.swift (in target 'Deydar' from project 'Deydar')
+
+ProcessInfoPlistFile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Info.plist /Users/runner/work/deydar-ios/deydar-ios/Deydar/Info.plist (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-infoPlistUtility /Users/runner/work/deydar-ios/deydar-ios/Deydar/Info.plist -producttype com.apple.product-type.application -genpkginfo /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/assetcatalog_generated_info.plist -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Info.plist
+
+SwiftDriverJobDiscovery normal arm64 Compiling CheckoutSession.swift, AppleSignIn.swift, GeneratedAssetSymbols.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftDriver\ Compilation Deydar normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-Swift-Compilation -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Deydar -Onone -enforce-exclusivity\=checked @/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target arm64-apple-ios16.0-simulator -g -module-cache-path /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/work/deydar-ios/deydar-ios/build/Index.noindex/DataStore -swift-version 5 -I /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache -output-file-map /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar-Swift.h -working-directory /Users/runner/work/deydar-ios/deydar-ios -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar.debug.dylib normal arm64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0-simulator -dynamiclib -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -O0 -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -filelist /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.LinkFileList -install_name @rpath/Deydar.debug.dylib -Xlinker -rpath -Xlinker @executable_path/Frameworks -dead_strip -Xlinker -object_path_lto -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar.debug.dylib
+
+SwiftDriverJobDiscovery normal x86_64 Compiling LocationBridge.swift, GoogleSignIn.swift, PushBridge.swift (in target 'Deydar' from project 'Deydar')
+
+SwiftDriver\ Compilation Deydar normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-Swift-Compilation -- /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Deydar -Onone -enforce-exclusivity\=checked @/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -target x86_64-apple-ios16.0-simulator -g -module-cache-path /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/runner/work/deydar-ios/deydar-ios/build/Index.noindex/DataStore -swift-version 5 -I /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -c -j3 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/SDKStatCaches.noindex/iphonesimulator18.5-22F76-96ae0914227b19deccb34b33ba7b5dea.sdkstatcache -output-file-map /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/deydar-ios/deydar-ios/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-generated-files.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-own-target-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-project-headers.hmap -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources-normal/x86_64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources/x86_64 -Xcc -I/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar-Swift.h -working-directory /Users/runner/work/deydar-ios/deydar-ios -experimental-emit-module-separately -disable-cmo
+
+Ld /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar.debug.dylib normal x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target x86_64-apple-ios16.0-simulator -dynamiclib -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -O0 -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -filelist /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.LinkFileList -install_name @rpath/Deydar.debug.dylib -Xlinker -rpath -Xlinker @executable_path/Frameworks -dead_strip -Xlinker -object_path_lto -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar.debug.dylib
+
+ConstructStubExecutorLinkFileList /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-ExecutorLinkFileList-normal-x86_64.txt (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    construct-stub-executor-link-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar.debug.dylib /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-ExecutorLinkFileList-normal-x86_64.txt
+note: Using stub executor library with Swift entry point. (in target 'Deydar' from project 'Deydar')
+
+Ld /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar normal x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target x86_64-apple-ios16.0-simulator -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -O0 -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibPath-normal-x86_64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibInstallName-normal-x86_64.txt -Xlinker -filelist -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-ExecutorLinkFileList-normal-x86_64.txt /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar.debug.dylib -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar
+
+CreateUniversalBinary /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Deydar.debug.dylib normal arm64\ x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo -create /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar.debug.dylib /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar.debug.dylib -output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Deydar.debug.dylib
+
+ConstructStubExecutorLinkFileList /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-ExecutorLinkFileList-normal-arm64.txt (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    construct-stub-executor-link-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar.debug.dylib /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'Deydar' from project 'Deydar')
+
+Ld /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar normal arm64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios16.0-simulator -isysroot /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk -O0 -L/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -F/Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar-ExecutorLinkFileList-normal-arm64.txt /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar.debug.dylib -o /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar
+
+CreateUniversalBinary /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Deydar normal arm64\ x86_64 (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo -create /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Binary/Deydar /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Binary/Deydar -output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Deydar
+
+ExtractAppIntentsMetadata (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name Deydar --sdk-root /Applications/Xcode_16.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator18.5.sdk --xcode-version 16F6 --platform-family iOS --deployment-target 16.0 --bundle-identifier com.deydar.app --output /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app --target-triple arm64-apple-ios16.0-simulator --target-triple x86_64-apple-ios16.0-simulator --binary-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Deydar --dependency-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar_dependency_info.dat --dependency-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar_dependency_info.dat --stringsdata-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --stringsdata-file /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftFileList --source-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftFileList --metadata-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/arm64/Deydar.SwiftConstValuesFileList --swift-const-vals-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Objects-normal/x86_64/Deydar.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-10-15 14:50:51.047 appintentsmetadataprocessor[2384:11358] Starting appintentsmetadataprocessor export
+2026-10-15 14:50:51.053 appintentsmetadataprocessor[2384:11358] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CopySwiftLibs /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-swiftStdLibTool --copy --verbose --scan-executable /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Deydar.debug.dylib --scan-folder /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Frameworks --scan-folder /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/PlugIns --scan-folder /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/SystemExtensions --scan-folder /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+Ignoring --strip-bitcode because --sign was not passed
+
+AppIntentsSSUTraining (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Info.plist --temp-dir-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/ssu --bundle-id com.deydar.app --product-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app --extracted-metadata-path /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app/Metadata.appintents --metadata-file-list /Users/runner/work/deydar-ios/deydar-ios/build/Build/Intermediates.noindex/Deydar.build/Debug-iphonesimulator/Deydar.build/Deydar.DependencyMetadataFileList --archive-ssu-assets
+2026-10-15 14:50:51.082 appintentsnltrainingprocessor[2385:11359] Parsing options for appintentsnltrainingprocessor
+2026-10-15 14:50:51.083 appintentsnltrainingprocessor[2385:11359] No AppShortcuts found - Skipping.
+
+RegisterExecutionPolicyException /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-RegisterExecutionPolicyException /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+Validate /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    builtin-validationUtility /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app -infoplist-subpath Info.plist
+
+Touch /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app (in target 'Deydar' from project 'Deydar')
+    cd /Users/runner/work/deydar-ios/deydar-ios
+    /usr/bin/touch -c /Users/runner/work/deydar-ios/deydar-ios/build/Build/Products/Debug-iphonesimulator/Deydar.app
+
+** BUILD SUCCEEDED **
+

@@ -1,0 +1,16 @@
+== build/Build/Products/Debug-iphonesimulator/Deydar.app
+PrivacyInfo.xcprivacy: present
+build/Build/Products/Debug-iphonesimulator/Deydar.app/PrivacyInfo.xcprivacy: OK
+NSPrivacyTracking: false
+Version: 2.0
+Build: 2
+ITSAppUsesNonExemptEncryption: false
+== build-device/Build/Products/Release-iphoneos/Deydar.app
+PrivacyInfo.xcprivacy: present
+build-device/Build/Products/Release-iphoneos/Deydar.app/PrivacyInfo.xcprivacy: OK
+NSPrivacyTracking: false
+Version: 2.0
+Build: 2
+ITSAppUsesNonExemptEncryption: false
+== Release : chaînes d'auto-test absentes ?
+OK : aucun code d'auto-test en Release
