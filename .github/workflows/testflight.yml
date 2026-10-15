@@ -5,7 +5,8 @@
 #   3. (Linux, moins cher) attente du traitement par Apple, ajout du build au groupe de testeurs externes
 #      (« Amis testeurs » par défaut, celui du lien public) et soumission à la Beta Review.
 # Secrets du dépôt (Settings > Secrets and variables > Actions) :
-#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (contenu complet du fichier AuthKey_XXXXXXXXXX.p8).
+#   ASC_KEY_P8 (contenu complet du fichier AuthKey_XXXXXXXXXX.p8). ASC_KEY_ID et ASC_ISSUER_ID ne sont pas secrets :
+#   valeurs de la clé « deydr » (Admin, 15/10) par défaut, un secret du même nom les remplace.
 # Sans ces secrets : répétition (archive non signée) pour vérifier que l'app compile avec le bon Xcode.
 name: TestFlight
 
@@ -44,8 +45,8 @@ jobs:
       build: ${{ steps.version.outputs.build }}
       version: ${{ steps.version.outputs.version }}
     env:
-      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || 'ZHANZKMUYB' }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || '5b77102e-6270-4ab4-b816-9d5add1d2528' }}
       ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
     steps:
       - uses: actions/checkout@v4
@@ -173,8 +174,8 @@ jobs:
       - run: pip install --quiet "pyjwt[crypto]==2.9.0"
       - name: Groupe de testeurs + Beta Review
         env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || 'ZHANZKMUYB' }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || '5b77102e-6270-4ab4-b816-9d5add1d2528' }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
           BUILD: ${{ needs.upload.outputs.build }}
           VERSION: ${{ needs.upload.outputs.version }}
