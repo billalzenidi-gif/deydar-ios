@@ -62,7 +62,7 @@ jobs:
       - name: Captures
         run: |
           APP=build/Build/Products/Debug-iphonesimulator/Deydar.app
-          SID=$(curl -s 'https://deydar.com/api/stays?sort=rating' -H 'x-deydar: 1' | python3 -c "import json,sys; print(json.load(sys.stdin)['items'][0]['id'])" || echo '')
+          SID=${STAY_ID:-st_rhbbR2QN9U9U}
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl ui "$UDID" appearance light || true
@@ -75,7 +75,7 @@ jobs:
           open_at() { xcrun simctl terminate "$UDID" "$BID" 2>/dev/null || true; sleep 1; xcrun simctl launch "$UDID" "$BID" "$@" >/dev/null; }
           open_at;                                       sleep 25; shot 01-accueil
           open_at -DeydarStartPath "/?near=1";           sleep 25; shot 02-pres-de-moi
-          [ -n "$SID" ] && { open_at -DeydarStartPath "/stays/$SID"; sleep 22; shot 03-logement; }
+          open_at -DeydarStartPath "/stays/$SID";   sleep 45; shot 03-logement
           open_at -DeydarStartPath "/signin";            sleep 18; shot 04-connexion
           open_at -DeydarStartPath "/help";              sleep 18; shot 05-aide
           xcrun simctl terminate "$UDID" "$BID" || true
