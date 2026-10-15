@@ -5,13 +5,18 @@ name: App Store screenshots
 
 on:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Machine GitHub (xcode-27 : simulateur avec accélération graphique, nécessaire à la carte WebGL des fiches)"
+        required: false
+        default: "xcode-27"
 
 permissions:
   contents: write
 
 jobs:
   shots:
-    runs-on: macos-15
+    runs-on: ${{ inputs.runner || 'xcode-27' }}
     timeout-minutes: 60
     env:
       BID: com.deydar.app
