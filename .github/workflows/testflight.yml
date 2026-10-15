@@ -58,7 +58,7 @@ jobs:
             v=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$x/Contents/Info.plist" 2>/dev/null) || continue
             b=$(/usr/libexec/PlistBuddy -c 'Print ProductBuildVersion' "$x/Contents/version.plist" 2>/dev/null) || continue
             echo "  $x  $v ($b)" >&2
-            case "$b" in *[a-z]) continue ;; esac   # bêta : numéro de build terminé par une minuscule
+            [[ "$b" =~ [a-z]$ ]] && continue   # bêta : numéro de build terminé par une minuscule
             [ "${v%%.*}" -ge 26 ] 2>/dev/null && echo "$v $x"
           done | sort -V | tail -1)
           X="${list#* }"
