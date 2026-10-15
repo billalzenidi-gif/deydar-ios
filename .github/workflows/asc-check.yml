@@ -1,0 +1,57 @@
+# Diagnostic de la clé API App Store Connect (secret ASC_KEY_P8 + Key ID / Issuer ID) : jeton ES256 signé sur GitHub,
+# appels en lecture seule à l'API d'App Store Connect. N'affiche que les codes et messages d'Apple, jamais la clé.
+name: ASC key check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet "pyjwt[crypto]==2.9.0"
+      - name: Appels à l'API App Store Connect
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID || 'ZHANZKMUYB' }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID || '5b77102e-6270-4ab4-b816-9d5add1d2528' }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        shell: python
+        run: |
+          import base64, json, os, time, urllib.request, urllib.error
+          import jwt
+          from cryptography.hazmat.primitives import serialization
+          raw = os.environ.get("ASC_KEY_P8", "")
+          print("secret présent :", bool(raw), "| longueur :", len(raw), "| CR :", "\r" in raw, "| BEGIN :", "BEGIN PRIVATE KEY" in raw)
+          pem = raw if "BEGIN PRIVATE KEY" in raw else base64.b64decode(raw).decode()
+          pem = pem.replace("\r\n", "\n").replace("\r", "\n").strip() + "\n"
+          try:
+              key = serialization.load_pem_private_key(pem.encode(), password=None)
+              print("clé lue :", type(key).__name__, getattr(key, "curve", None) and key.curve.name)
+          except Exception as e:
+              print("clé illisible :", type(e).__name__, e); raise SystemExit(1)
+          kid, iss = os.environ["ASC_KEY_ID"].strip(), os.environ["ASC_ISSUER_ID"].strip()
+          print("kid :", kid, "| iss :", iss)
+          def call(path, tok):
+              req = urllib.request.Request("https://api.appstoreconnect.apple.com" + path, headers={"Authorization": "Bearer " + tok})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      body = json.loads(r.read() or b"{}")
+                      return r.status, [d.get("attributes", {}).get("name") or d.get("attributes", {}).get("bundleId") for d in body.get("data", [])][:5]
+              except urllib.error.HTTPError as e:
+                  return e.code, (e.read() or b"")[:600].decode(errors="replace")
+          now = int(time.time())
+          variants = {
+              "standard (iss + aud + exp 15 min)": {"iss": iss, "iat": now, "exp": now + 900, "aud": "appstoreconnect-v1"},
+              "sans iat": {"iss": iss, "exp": now + 900, "aud": "appstoreconnect-v1"},
+          }
+          for label, claims in variants.items():
+              tok = jwt.encode(claims, pem, algorithm="ES256", headers={"kid": kid, "typ": "JWT"})
+              for path in ["/v1/apps?filter[bundleId]=com.deydar.app&fields[apps]=name,bundleId", "/v1/apps?limit=1&fields[apps]=name"]:
+                  print(f"[{label}] GET {path.split('?')[0]} ->", *call(path, tok))
