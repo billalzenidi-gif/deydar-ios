@@ -11,6 +11,9 @@
 name: TestFlight
 
 on:
+  # Tag « ios-build-N » poussé avec git (sans accès à la page GitHub) : envoi du build N, sans groupe de testeurs.
+  push:
+    tags: ["ios-build-*"]
   workflow_dispatch:
     inputs:
       build:
@@ -72,6 +75,7 @@ jobs:
         id: version
         run: |
           BUILD="${{ inputs.build }}"
+          case "$GITHUB_REF_NAME" in ios-build-*) BUILD="${GITHUB_REF_NAME#ios-build-}" ;; esac
           [ -n "$BUILD" ] || BUILD=$(( GITHUB_RUN_NUMBER + 1 ))
           VERSION=$(sed -n 's/.*MARKETING_VERSION = \(.*\);/\1/p' Deydar.xcodeproj/project.pbxproj | head -1)
           echo "build=$BUILD" >> "$GITHUB_OUTPUT"
