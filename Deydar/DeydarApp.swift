@@ -11,8 +11,10 @@ struct DeydarApp: App {
             WebScreen()
                 .ignoresSafeArea()
                 .background(Color(AppConfig.sand))
-                .onOpenURL { url in
-                    NotificationCenter.default.post(name: .deydarOpenURL, object: url)
+                // deydar://… et liens universels https://deydar.com/… (WhatsApp, Messages, Safari) : la page s'ouvre dans l'app.
+                .onOpenURL { url in DeepLink.open(url) }
+                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+                    if let url = activity.webpageURL { DeepLink.open(url) }
                 }
         }
     }

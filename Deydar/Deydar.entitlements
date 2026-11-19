@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Notifications push (APNs). Xcode passe automatiquement en « production » pour TestFlight et l'App Store ;
+<!-- Liens universels (19/11) : un lien https://deydar.com/… touché sur l'iPhone (WhatsApp, Messages, Safari) ouvre l'app
+     si elle est installée. Fichier côté site : https://deydar.com/.well-known/apple-app-site-association.
+     Notifications push (APNs). Xcode passe automatiquement en « production » pour TestFlight et l'App Store ;
      l'identifiant d'app com.deydar.app doit avoir les capacités « Push Notifications » et « Sign in with Apple »
      (portail Apple Developer > Identifiers). -->
 <plist version="1.0">
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:deydar.com</string>
+		<string>applinks:www.deydar.com</string>
+	</array>
 	<key>com.apple.developer.applesignin</key>
 	<array>
 		<string>Default</string>

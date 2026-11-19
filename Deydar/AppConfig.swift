@@ -50,6 +50,16 @@ enum L10n {
     }
 }
 
+/// Lien reçu avant que l'écran web soit prêt (app lancée par un lien universel ou une notification) : ouvert au démarrage.
+enum DeepLink {
+    static var pending: URL?
+    static func open(_ url: URL) {
+        pending = url
+        NotificationCenter.default.post(name: .deydarOpenURL, object: url)
+    }
+    static func take() -> URL? { defer { pending = nil }; return pending }
+}
+
 extension Notification.Name {
     /// Lien profond « deydar://chemin » reçu par l'app → la page correspondante s'ouvre.
     static let deydarOpenURL = Notification.Name("deydarOpenURL")

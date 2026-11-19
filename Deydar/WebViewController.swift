@@ -142,6 +142,11 @@ final class WebViewController: UIViewController {
             start = url
         }
         #endif
+        // App lancée par un lien (lien universel, notification) : cette page plutôt que l'accueil.
+        if let link = DeepLink.take() {
+            if let host = link.host?.lowercased(), AppConfig.appHosts.contains(host) { start = link }
+            else if link.scheme == "deydar" { DispatchQueue.main.async { NotificationCenter.default.post(name: .deydarOpenURL, object: link) } }
+        }
         load(start)
         checkAppleCredential()
     }
@@ -272,6 +277,7 @@ final class WebViewController: UIViewController {
     /// deydar://stays/abc → https://<site>/stays/abc
     @objc private func openDeepLink(_ note: Notification) {
         guard let url = note.object as? URL else { return }
+        DeepLink.pending = nil // traité ici (l'écran web est prêt)
         if let host = url.host?.lowercased(), AppConfig.appHosts.contains(host) { load(url); return }
         guard url.scheme == "deydar" else { return }
         let path = ((url.host.map { "/" + $0 } ?? "") + url.path)

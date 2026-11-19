@@ -32,7 +32,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         if let link = response.notification.request.content.userInfo["link"] as? String, let url = PushBridge.url(for: link) {
-            NotificationCenter.default.post(name: .deydarOpenURL, object: url)
+            DeepLink.open(url)
         }
         completionHandler()
     }
