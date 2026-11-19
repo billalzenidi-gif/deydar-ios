@@ -1,0 +1,18 @@
+2026-11-19 11:06:55.448 Df Deydar[8443:76a1] (Foundation) DEYDAR-SELFTEST filename -a-b-c-.json
+2026-11-19 11:06:55.448 Df Deydar[8443:76a1] (Foundation) DEYDAR-SELFTEST textsize UICTContentSizeCategoryL text 100%
+2026-11-19 11:06:55.456 Df Deydar[8443:76a1] (Foundation) DEYDAR-SELFTEST bridge {"share":"function","canShareUrl":true,"canShareFiles":false,"native":true,"apple":"function","textAdjust":"100%","overflow":false}
+2026-11-19 11:07:34.781 Df Deydar[10190:88bf] (Foundation) DEYDAR-SELFTEST filename -a-b-c-.json
+2026-11-19 11:07:34.781 Df Deydar[10190:88bf] (Foundation) DEYDAR-SELFTEST textsize UICTContentSizeCategoryL text 100%
+2026-11-19 11:07:34.792 Df Deydar[10190:88bf] (Foundation) DEYDAR-SELFTEST bridge {"share":"function","canShareUrl":true,"canShareFiles":false,"native":true,"apple":"function","textAdjust":"100%","overflow":false}
+2026-11-19 11:08:15.333 Df Deydar[12320:9e3c] (Foundation) DEYDAR-SELFTEST filename -a-b-c-.json
+2026-11-19 11:08:15.333 Df Deydar[12320:9e3c] (Foundation) DEYDAR-SELFTEST textsize UICTContentSizeCategoryL text 100%
+2026-11-19 11:08:15.338 Df Deydar[12320:9e3c] (Foundation) DEYDAR-SELFTEST bridge {"share":"function","canShareUrl":true,"canShareFiles":false,"native":true,"apple":"function","textAdjust":"100%","overflow":false}
+2026-11-19 11:09:30.180 Df Deydar[16607:c79a] (Foundation) DEYDAR-SELFTEST filename -a-b-c-.json
+2026-11-19 11:09:30.180 Df Deydar[16607:c79a] (Foundation) DEYDAR-SELFTEST textsize UICTContentSizeCategoryAccessibilityL text 130%
+2026-11-19 11:09:30.184 Df Deydar[16607:c79a] (Foundation) DEYDAR-SELFTEST bridge {"share":"function","canShareUrl":true,"canShareFiles":false,"native":true,"apple":"function","textAdjust":"130%","overflow":false}
+2026-11-19 11:11:22.380 Df Deydar[22133:1001c] (Foundation) DEYDAR-SELFTEST filename -a-b-c-.json
+2026-11-19 11:11:22.380 Df Deydar[22133:1001c] (Foundation) DEYDAR-SELFTEST textsize UICTContentSizeCategoryL text 100%
+2026-11-19 11:11:22.385 Df Deydar[22133:1001c] (Foundation) DEYDAR-SELFTEST bridge {"share":"function","canShareUrl":true,"canShareFiles":false,"native":true,"apple":"function","textAdjust":"100%","overflow":false}
+2026-11-19 11:11:22.405 Df Deydar[22133:1001c] (Foundation) DEYDAR-SELFTEST push status notDetermined
+2026-11-19 11:11:45.850 Df Deydar[22133:1001c] (Foundation) DEYDAR-SELFTEST push received link=/host/bookings
+2026-11-19 11:12:46.416 Df Deydar[22133:1001c] (Foundation) DEYDAR-SELFTEST resync foreground
