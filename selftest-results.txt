@@ -1,0 +1,12 @@
+PASS  nom de fichier nettoyé (pas de ../ ni de :)
+PASS  navigator.share branché sur la feuille iOS
+PASS  navigator.canShare(url) = vrai
+PASS  navigator.canShare(fichiers) = faux (non pris en charge)
+PASS  window.DeydarNative présent
+PASS  DeydarNative.appleSignIn présent (Se connecter avec Apple natif)
+PASS  texte très grand : réglage iOS lu (130 %)
+PASS  texte très grand : texte du site agrandi, aucun débordement horizontal
+PASS  taille normale : aucun débordement horizontal
+PASS  push : aucune autorisation demandée au lancement
+PASS  retour au premier plan : resynchronisation demandée au site
+PASS  push : notification reçue app ouverte (lien interne lu)
